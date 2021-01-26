@@ -1,0 +1,22 @@
+.controls {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: auto;
+  height: auto;
+  padding: 20px 20px 10px 20px;
+  border: 2px solid black;
+  border-radius: 4px;
+
+  background-color: white;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.controls button {
+  width: 30px;
+  height: auto;
+  margin-bottom: 10px;
+  cursor: pointer;
+}

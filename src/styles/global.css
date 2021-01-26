@@ -1,0 +1,45 @@
+:root {
+  
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+.btn-clear {
+  background: none;
+  border: none;
+  padding: 0;
+  appearance: none;
+}
+
+.whiteboard {
+  /* 
+    Background pattern: "Polka" 
+    from: https://www.magicpattern.design/tools/css-backgrounds/ 
+  */
+  --bg-color: #f9f9f9;
+  background-color: var(--bg-color);
+  background-image: radial-gradient(#cbcbcb 2px, var(--bg-color) 2px);
+  background-size: 60px 60px;
+}
+
+.cursor-pencil {
+  cursor: url("../assets/icons/pencil-alt.svg"), pointer;
+}
+
+.cursor-eraser {
+  cursor: url("assets/icons/eraser.svg"), pointer;
+}
+
+.shadow-light {
+  box-shadow: 2px 2px 14px -7px rgba(0, 0, 0, 0.89);
+}
