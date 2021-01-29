@@ -1,17 +1,19 @@
 import { useState, useRef } from "react";
 
+import { DRAW } from 'features/controls/constants'
+
 function useDraw() {
-  const [tool, setTool] = useState('pencil');
+  const [tool, setTool] = useState(DRAW);
   const [lines, setLines] = useState([]);
   const isDrawing = useRef(false);
 
-  const handleMouseDown = (e) => {
+  const drawMouseDown = (e) => {
     isDrawing.current = true;
     const pos = e.target.getStage().getPointerPosition();
     setLines([...lines, { tool, points: [pos.x , pos.y] }]);
   };
 
-  const handleMouseMove = (e) => {
+  const drawMouseMove = (e) => {
     // no drawing - skipping
     if (!isDrawing.current) {
       return;
@@ -27,15 +29,15 @@ function useDraw() {
     setLines(lines.concat());
   };
 
-  const handleMouseUp = () => {
+  const drawMouseUp = () => {
     isDrawing.current = false;
   };
 
   return {
     lines, 
-    handleMouseDown,
-    handleMouseMove,
-    handleMouseUp,
+    drawMouseDown,
+    drawMouseMove,
+    drawMouseUp,
     setTool
   }
 }

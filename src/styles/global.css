@@ -33,7 +33,7 @@ code {
 }
 
 .cursor-pencil {
-  cursor: url("../assets/icons/pencil-alt.svg"), pointer;
+  cursor: url("assets/icons/pencil-alt.svg"), pointer;
 }
 
 .cursor-eraser {
@@ -42,4 +42,12 @@ code {
 
 .shadow-light {
   box-shadow: 2px 2px 14px -7px rgba(0, 0, 0, 0.89);
+}
+
+.cursor-grab {
+  cursor: grab;
+}
+
+.cursor-grabbing {
+  cursor: grabbing;
 }
