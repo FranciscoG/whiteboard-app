@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import controlReducer from 'features/controls/controlSlice'
+import toolReducer from 'features/tools/toolSlice'
 
 export default combineReducers({
-  control: controlReducer,
+  tool: toolReducer,
 })

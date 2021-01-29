@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 
-import { DRAW } from 'features/controls/constants'
+import { DRAW, TOOL_SIZE } from "features/tools/constants";
 
 function useDraw() {
   const [tool, setTool] = useState(DRAW);
@@ -10,7 +10,10 @@ function useDraw() {
   const drawMouseDown = (e) => {
     isDrawing.current = true;
     const pos = e.target.getStage().getPointerPosition();
-    setLines([...lines, { tool, points: [pos.x , pos.y] }]);
+
+    const yOffset = tool === DRAW ? TOOL_SIZE : TOOL_SIZE / 2;
+    const xOffset = tool === DRAW ? 0 : TOOL_SIZE / 2;
+    setLines([...lines, { tool, points: [pos.x + xOffset, pos.y + yOffset] }]);
   };
 
   const drawMouseMove = (e) => {
@@ -21,25 +24,32 @@ function useDraw() {
     const stage = e.target.getStage();
     const point = stage.getPointerPosition();
     let lastLine = lines[lines.length - 1];
-    // add point, +26 to align with the tip of pencil cursor which is 26px height
-    lastLine.points = lastLine.points.concat([point.x, point.y + 26]);
+    
+    /**
+     * Offset for the Draw tool to get it to match up with the tip of the pen
+     * Offset for the Erase tool to center it within the square
+     */
+    const yOffset = tool === DRAW ? TOOL_SIZE : TOOL_SIZE / 2;
+    const xOffset = tool === DRAW ? 0 : TOOL_SIZE / 2;
+    
+    lastLine.points = lastLine.points.concat([point.x + xOffset, point.y + yOffset]);
 
     // replace last
     lines.splice(lines.length - 1, 1, lastLine);
     setLines(lines.concat());
   };
 
-  const drawMouseUp = () => {
+  const drawMouseUp = (e) => {
     isDrawing.current = false;
   };
 
   return {
-    lines, 
+    lines,
     drawMouseDown,
     drawMouseMove,
     drawMouseUp,
-    setTool
-  }
+    setDrawTool: setTool,
+  };
 }
 
 export default useDraw;

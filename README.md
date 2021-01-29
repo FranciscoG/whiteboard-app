@@ -8,9 +8,7 @@ Built using React & [Konva](https://konvajs.org/)
 - draw
   - change color
   - change line thickness
-  - selectable and resizable (TBD on this)
 - erase
-  - change eraser thickness
 - add sticky note
   - add responsive text to sticky note
   - selectable and resizable
