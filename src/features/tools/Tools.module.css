@@ -54,10 +54,6 @@
   border-radius: 50%;
 }
 
-.active:focus {
-  border-radius: 0;
-}
-
 .toolBtn:focus {
   outline: none;
   background-color: rgba(0, 20, 50, 0.2);

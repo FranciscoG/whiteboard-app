@@ -1,11 +1,21 @@
-import { useState, useRef } from "react";
-
+import { useState, useRef, useEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import { selectLines, setLines as reducerSetLine } from 'canvas/canvasSlice';
 import { DRAW, TOOL_SIZE } from "features/tools/constants";
 
 function useDraw() {
   const [tool, setTool] = useState(DRAW);
   const [lines, setLines] = useState([]);
   const isDrawing = useRef(false);
+  const dispatch = useDispatch();
+
+  const color = useSelector(state => state.tool.draw.color);
+  const thickness = useSelector(state => state.tool.draw.thickness);
+  const linesFromState = useSelector(selectLines);
+
+  useEffect(() => {
+    setLines(linesFromState)
+  }, [linesFromState, setLines])
 
   const drawMouseDown = (e) => {
     isDrawing.current = true;
@@ -13,7 +23,8 @@ function useDraw() {
 
     const yOffset = tool === DRAW ? TOOL_SIZE : TOOL_SIZE / 2;
     const xOffset = tool === DRAW ? 0 : TOOL_SIZE / 2;
-    setLines([...lines, { tool, points: [pos.x + xOffset, pos.y + yOffset] }]);
+    const newLines = [...lines, { tool, color, thickness, points: [pos.x + xOffset, pos.y + yOffset] }];
+    setLines(newLines);
   };
 
   const drawMouseMove = (e) => {
@@ -24,14 +35,14 @@ function useDraw() {
     const stage = e.target.getStage();
     const point = stage.getPointerPosition();
     let lastLine = lines[lines.length - 1];
-    
+
     /**
      * Offset for the Draw tool to get it to match up with the tip of the pen
      * Offset for the Erase tool to center it within the square
      */
     const yOffset = tool === DRAW ? TOOL_SIZE : TOOL_SIZE / 2;
     const xOffset = tool === DRAW ? 0 : TOOL_SIZE / 2;
-    
+
     lastLine.points = lastLine.points.concat([point.x + xOffset, point.y + yOffset]);
 
     // replace last
@@ -41,6 +52,7 @@ function useDraw() {
 
   const drawMouseUp = (e) => {
     isDrawing.current = false;
+    dispatch(reducerSetLine(lines))
   };
 
   return {

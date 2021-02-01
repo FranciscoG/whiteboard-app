@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { TwitterPicker } from "react-color";
+import { TwitterPicker as ColorPicker } from "react-color";
 import { cn } from "utils";
 import Slider from "components/slider";
 import { setDrawColor, setDrawThickness } from "features/tools/toolSlice";
@@ -37,7 +37,7 @@ function DrawSettings({ show = false, draw, setDrawColor, setDrawThickness }) {
           </svg>
         )}
       />
-      <TwitterPicker
+      <ColorPicker
         color={draw.color}
         triangle={null}
         colors={pickerColors}
