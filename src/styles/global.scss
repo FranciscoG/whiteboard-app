@@ -1,0 +1,89 @@
+@import './custom-bootstrap.scss';
+
+:root {
+  /* these sticky note color names are not exact but the closest primary/base color */
+  --noteYellow: #feff9c;
+  --noteBlue: #6ed2d0;
+  --noteGreen: #def350;
+  --noteRed: #ff6b81;
+  --notePurple: #ff339a;
+  --noteOrange: #ff992a;
+
+  --rioBlue: #0099ff;
+  --rioPink: #ff57bc;
+  --rioGreen: #2ede5d;
+  --rioYellow: #ffd300;
+
+  --primary: var(--rioBlue);
+}
+
+
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.btn-clear {
+  background: none;
+  border: none;
+  padding: 0;
+  appearance: none;
+}
+
+.whiteboard {
+  /* 
+    Background pattern: "Polka" 
+    from: https://www.magicpattern.design/tools/css-backgrounds/ 
+  */
+  --bg-color: #f9f9f9;
+  background-color: var(--bg-color);
+  background-image: radial-gradient(#cbcbcb 2px, var(--bg-color) 2px);
+  background-size: 60px 60px;
+}
+
+.cursor-pencil {
+  cursor: url("../assets/icons/pencil-alt.svg"), pointer;
+}
+
+.cursor-eraser {
+  cursor: url("../assets/icons/square.svg"), pointer;
+}
+
+.shadow-light {
+  box-shadow: 2px 2px 14px -7px rgba(0, 0, 0, 0.89);
+}
+
+.cursor-grab {
+  cursor: grab;
+}
+
+.cursor-grabbing {
+  cursor: grabbing;
+}
+
+.has-dialog {
+  overflow: hidden;
+}
+
+/* absolute center, horiz and vert */
+.flex-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.h-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.v-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
