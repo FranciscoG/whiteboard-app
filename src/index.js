@@ -1,3 +1,4 @@
+import "styles/bootstrap-reboot.css";
 import "styles/global.css";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -5,7 +6,7 @@ import App from "./app/App";
 
 // redux stuff
 import { Provider } from "react-redux";
-import store from 'app/store';
+import store from "app/store";
 
 ReactDOM.render(
   <React.StrictMode>

@@ -1,21 +1,30 @@
 import { useState, useRef, useEffect } from "react";
-import { useDispatch, useSelector } from 'react-redux';
-import { selectLines, setLines as reducerSetLine } from 'canvas/canvasSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { selectLines, setLines as reducerSetLine } from "canvas/canvasSlice";
 import { DRAW, TOOL_SIZE } from "features/tools/constants";
 
+/**
+ * useDraw hook
+ * for better performance this hook keeps the lines in its own internal state and
+ * updates global redux state only on MouseUp.
+ */
 function useDraw() {
   const [tool, setTool] = useState(DRAW);
   const [lines, setLines] = useState([]);
   const isDrawing = useRef(false);
   const dispatch = useDispatch();
 
-  const color = useSelector(state => state.tool.draw.color);
-  const thickness = useSelector(state => state.tool.draw.thickness);
+  const color = useSelector((state) => state.tool.draw.color);
+  const thickness = useSelector((state) => state.tool.draw.thickness);
   const linesFromState = useSelector(selectLines);
 
+  /**
+   * When lines in redux state are updated because of undo/redo then we need
+   * to update the local state here
+   */
   useEffect(() => {
-    setLines(linesFromState)
-  }, [linesFromState, setLines])
+    setLines(linesFromState);
+  }, [linesFromState, setLines]);
 
   const drawMouseDown = (e) => {
     isDrawing.current = true;
@@ -23,7 +32,10 @@ function useDraw() {
 
     const yOffset = tool === DRAW ? TOOL_SIZE : TOOL_SIZE / 2;
     const xOffset = tool === DRAW ? 0 : TOOL_SIZE / 2;
-    const newLines = [...lines, { tool, color, thickness, points: [pos.x + xOffset, pos.y + yOffset] }];
+    const newLines = [
+      ...lines,
+      { tool, color, thickness, points: [pos.x + xOffset, pos.y + yOffset] },
+    ];
     setLines(newLines);
   };
 
@@ -52,7 +64,10 @@ function useDraw() {
 
   const drawMouseUp = (e) => {
     isDrawing.current = false;
-    dispatch(reducerSetLine(lines))
+    // update redux store
+    setTimeout(() => {
+      dispatch(reducerSetLine(lines));
+    }, 1);
   };
 
   return {

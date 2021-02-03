@@ -3,6 +3,10 @@
   position: relative;
 }
 
+.label:not(:global(.visually-hidden)) {
+  display: block;
+}
+
 .range {
   width: 100%;
   cursor: grab;

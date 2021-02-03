@@ -1,11 +1,30 @@
 :root {
-  
+  /* these sticky note color names are not exact but the closest primary/base color */
+  --noteYellow: #feff9c;
+  --noteBlue: #6ed2d0;
+  --noteGreen: #def350;
+  --noteRed: #ff6b81;
+  --notePurple: #ff339a;
+  --noteOrange: #ff992a;
+
+  /* CSS HEX */
+  --cornflower-blue: #91a6ffff;
+  --persian-pink: #ff88dcff;
+  --laser-lemon: #faff7fff;
+  --white: #ffffffff;
+  --tart-orange: #ff5154ff;
+
+  --rioBlue: #0099ff;
+  --rioPink: #ff57bc;
+  --rioGreen: #2ede5d;
+  --rioYellow: #ffd300;
+
+  --primary: var(--rioBlue);
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -52,6 +71,10 @@ code {
   cursor: grabbing;
 }
 
+.has-dialog {
+  overflow: hidden;
+}
+
 .visually-hidden,
 .visually-hidden-focusable:not(:focus) {
   position: absolute !important;
@@ -63,4 +86,71 @@ code {
   clip: rect(0, 0, 0, 0) !important;
   white-space: nowrap !important;
   border: 0 !important;
+}
+
+/* absolute center, horiz and vert */
+.flex-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.h-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn:disabled,
+.btn.disabled,
+fieldset:disabled .btn {
+  pointer-events: none;
+  opacity: 0.65;
+}
+
+.btn {
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  /* cursor: pointer; */
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+  }
+}
+.btn:hover {
+  color: #212529;
+}
+.btn-check:focus + .btn,
+.btn:focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+.btn:disabled,
+.btn.disabled,
+fieldset:disabled .btn {
+  pointer-events: none;
+  opacity: 0.65;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+}
+
+.btn:disabled {
+  background-color: rgba(50,50,50, 0.2) !important;
 }

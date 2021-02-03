@@ -49,6 +49,7 @@ function Tools({ setTool, cursor }) {
           }}
         >
           <Pen />
+          <span className={styles.arrowSubMenu}/>
         </button>
         <DrawSettings show={cursor === DRAW && showSettings}  />
         <button

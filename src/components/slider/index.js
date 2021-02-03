@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { cn } from 'utils'
-import styles from './slider.module.css';
+import { cn } from "utils";
+import styles from "./slider.module.css";
 
 function Slider({
   id,
   label,
+  hideLabel = true,
   step = "1",
   min = "1",
   max,
@@ -18,6 +19,9 @@ function Slider({
 
   return (
     <div {...props} className={cn(className, styles.container)}>
+      <label htmlFor={id} className={cn(styles.label, hideLabel && "visually-hidden")}>
+        {label}
+      </label>
       <input
         className={styles.range}
         type="range"
@@ -31,9 +35,6 @@ function Slider({
           onChange(e);
         }}
       />
-      <label htmlFor={id} className="visually-hidden">
-        {label}
-      </label>
       {example && <div className={styles.example}>{example(value)}</div>}
     </div>
   );

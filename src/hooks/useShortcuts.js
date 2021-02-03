@@ -4,6 +4,7 @@ import { DRAW, ERASE, NOTE, POINTER } from "features/tools/constants";
 
 import { ActionCreators } from "redux-undo";
 import { useDispatch } from "react-redux";
+import { isEditable } from 'utils';
 
 const ACTIONS_MAP = {};
 ACTIONS_MAP[KEYS.p] = DRAW;
@@ -17,6 +18,8 @@ function useShortcuts() {
 
   useEffect(() => {
     function onKeyDown(e) {
+      if (isEditable(document.activeElement)) { return; }
+      
       if (e.metaKey && e.shiftKey && e.key === KEYS.z) {
         dispatch(ActionCreators.redo());
         return;
@@ -29,6 +32,8 @@ function useShortcuts() {
     }
 
     function onKeyUp(e) {
+      if (isEditable(document.activeElement)) { return; }
+
       const matchingAction = ACTIONS_MAP[e.key];
       if (matchingAction) {
         setShortcut(matchingAction);
