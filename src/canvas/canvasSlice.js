@@ -23,27 +23,35 @@ const canvasSlice = createSlice({
         lines: [...state.lines, action.payload],
       };
     },
-    setNotes(state, action) {
-      return {
-        ...state,
-        notes: action.payload,
-      };
-    },
     addNote(state, action) {
-      return {
-        ...state,
-        notes: [...state.notes, action.payload],
-      };
+      /**
+       * mark any previous selected notes as false
+       */
+      const deselected = state.notes.map((n) => {
+        n.selected = false;
+        return n;
+      });
+
+      state.notes = [...deselected, action.payload];
+    },
+    updateNote(state, action) {
+      /**
+       * mark any previous selected notes as false
+       * and remove note with matching ID because it will be replaced
+       */
+      state.notes = state.notes.map((n) => {
+        n.selected = false;
+        if (n.id === action.payload.id) {
+          return action.payload;
+        }
+        return n;
+      });
     },
   },
 });
 
-export const { setLines, setNotes, addNote, addLine } = canvasSlice.actions;
+export const { setLines, addLine, updateNote, addNote } = canvasSlice.actions;
 
-// The function below is called a selector and allows us to select a value from
-// the state. Selectors can also be defined inline where they're used instead of
-// in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
-// Note: when using redux-undo, you reference state.[sliceName].present.[targetKey]
 export const selectLines = (state) => state.canvas.present.lines;
 
 export default canvasSlice.reducer;

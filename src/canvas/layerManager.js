@@ -2,13 +2,14 @@ import { DRAW, ERASE, POINTER } from "features/tools/constants";
 import Draw from "features/draw";
 import Notes from "features/note";
 import NoteSingle from "features/note/single";
+import { Layer } from "react-konva";
 
 /**
  * This will hold the currently active layer
  * - Drawing: This will move all lines to active so that it can erase
  * - Notes: only actively selected if tool is pointer
  */
-export function Active({ tool, notes, ...props }) {
+function Active({ tool, notes, ...props }) {
   let selectedNote = tool === POINTER ? notes.find((n) => n.selected) : null;
   return (
     <>
@@ -24,7 +25,7 @@ export function Active({ tool, notes, ...props }) {
  * - Drawing: all lines
  * - Notes: only unselected notes or all notes if using any tool other than pointer
  */
-export function Inactive({ tool, notes, ...props }) {
+function Inactive({ tool, notes, ...props }) {
   return (
     <>
       {(tool !== DRAW || tool !== ERASE) && <Draw lines={props.lines} />}
@@ -36,3 +37,27 @@ export function Inactive({ tool, notes, ...props }) {
     </>
   );
 }
+
+function LayerManager({ currentTool, lines = [], notes = [] }) {
+  return (
+    <>
+      {/**
+       * Inactive Later so that the whole canvas isn't redrawing for every
+       * single tool
+       */}
+      <Layer>
+        <Inactive tool={currentTool} lines={lines} notes={notes.filter((n) => !n.selected)} />
+      </Layer>
+
+      {/**
+       * Active layer, only the current active tool should be rendering here
+       * otherwise it will get moved to the inactive layer
+       */}
+      <Layer>
+        <Active tool={currentTool} lines={lines} notes={notes.filter((n) => n.selected)} />
+      </Layer>
+    </>
+  );
+}
+
+export default LayerManager

@@ -15,7 +15,6 @@ export function cn(...classNames) {
 }
 
 export function isEditable(el) {
-  
   if (el.isContentEditable) return true;
   const tagName = el.tagName.toLowerCase();
   if (tagName === "textarea") return true;
@@ -23,7 +22,7 @@ export function isEditable(el) {
   if (el.disabled) return false;
   if (el.readonly) return false;
 
-  const type = el.getAttribute("type").toLowerCase();
+  const type = (el.getAttribute("type") || "text").toLowerCase();
   // if any of these input types is not supported by a browser, it will behave as input type text.
   const inputTypes = [
     "date",

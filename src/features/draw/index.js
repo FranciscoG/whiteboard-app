@@ -3,13 +3,13 @@ import { Line } from "react-konva";
 import { ERASE } from "features/tools/constants";
 
 const linePropType = PropTypes.shape({
-  tool: PropTypes.string,
-  color: PropTypes.string,
-  thickness: PropTypes.number,
-  points: PropTypes.arrayOf(PropTypes.number),
+  tool: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired,
+  thickness: PropTypes.number.isRequired,
+  points: PropTypes.arrayOf(PropTypes.number).isRequired,
 });
 
-export function DrawSingleLine({ line }) {
+function DrawSingleLine({ line }) {
   if (!line) return null;
   return (
     <Line
@@ -24,11 +24,17 @@ export function DrawSingleLine({ line }) {
 }
 
 DrawSingleLine.propTypes = {
-  line: linePropType
-}
+  line: linePropType,
+};
 
 function Draw({ lines = [] }) {
-  return lines.map((line, i) => <DrawSingleLine key={`line-${i}`} line={line} />);
+  return (
+    <>
+      {lines.map((line, i) => (
+        <DrawSingleLine key={`line-${i}`} line={line} />
+      ))}
+    </>
+  );
 }
 
 Draw.propTypes = {

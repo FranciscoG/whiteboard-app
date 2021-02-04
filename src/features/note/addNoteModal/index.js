@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { CirclePicker } from "react-color";
+import { v1 as uuidv1 } from "uuid";
+
+import { updateNote, addNote } from "canvas/canvasSlice";
 
 import Slider from "components/slider";
 import Modal from "components/modal";
@@ -9,17 +12,32 @@ import styles from "./addNoteModal.module.css";
 
 const ColorPalette = ["#feff9c", "#6ed2d0", "#def350", "#ff6b81", "#ff339a", "#ff992a"];
 
+const defaultNote = {
+  id: null,
+  x: null,
+  y: null,
+  width: 300,
+  height: 300,
+  text: "",
+  fontSize: 32,
+  color: ColorPalette[0],
+  scaleX: 0.75,
+  scaleY: 0.75,
+};
+
 function AddNoteModal({
-  show,
+  show = false,
   onSave = () => {},
   onCancel = () => {},
-  text = "",
-  noteColor = ColorPalette[0],
+  note = defaultNote,
+  updateNote,
+  addNote,
 }) {
   const [_show, setShow] = useState(show);
-  const [editText, setEditText] = useState(text);
-  const [fontSize, setFontSize] = useState(32);
-  const [currentColor, setCurrentColor] = useState(noteColor);
+  const [editText, setEditText] = useState(note.text);
+  const [fontSize, setFontSize] = useState(note.fontSize);
+  const [currentColor, setCurrentColor] = useState(note.color);
+  const [pos, setPos] = useState([window.innerWidth / 6, window.innerWidth / 6]);
 
   useEffect(() => {
     setShow(show);
@@ -37,11 +55,35 @@ function AddNoteModal({
           onSubmit={(e) => {
             e.preventDefault();
             setShow(false);
-            onSave({
+
+            const newNote = {
               text: editText,
               fontSize,
-              color: noteColor,
-            });
+              color: currentColor,
+            };
+
+            if (!note.x && !note.y) {
+              const [x, y] = pos;
+              newNote.x = x;
+              newNote.y = y;
+              if (x < window.innerWidth - 400) {
+                setPos([x + 350, y]);
+              } else {
+                setPos([window.innerWidth / 6, y + 350]);
+              }
+            }
+
+            if (!note.id) {
+              // new note
+              newNote.id = uuidv1();
+              // randomly place it x,y
+              addNote(Object.assign({}, note, newNote));
+            } else {
+              // update to existing note
+              updateNote(Object.assign({}, note, newNote));
+            }
+
+            onSave();
             reset();
           }}
         >
@@ -61,12 +103,15 @@ function AddNoteModal({
                 aria-required="true"
                 className={styles.textEdit}
                 contentEditable={true}
-                tabIndex="0"
+                suppressContentEditableWarning={true}
+                tabIndex={0}
                 onInput={(e) => {
+                  // @ts-ignore
                   setEditText(e.target.textContent);
                 }}
-                html={editText}
-              />
+              >
+                {note.text}
+              </div>
             </div>
           </div>
           <div className={styles.actions}>
@@ -81,7 +126,7 @@ function AddNoteModal({
                 setFontSize(Number(e.target.value));
               }}
             />
-            <div className="h-center">
+            <div className={cn("h-center p-2", styles.colors)}>
               <CirclePicker
                 color={currentColor}
                 colors={ColorPalette}
@@ -90,22 +135,28 @@ function AddNoteModal({
                 }}
               />
             </div>
-            <button
-              type="button"
-              className="btn"
-              onClick={(e) => {
-                e.preventDefault();
-                setShow(false);
-                reset();
-                onCancel();
-              }}
-            >
-              cancel
-            </button>
+            <div className="d-flex justify-content-end mt-4 pe-2">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShow(false);
+                  reset();
+                  onCancel();
+                }}
+              >
+                cancel
+              </button>
 
-            <button className="btn btn-primary" type="submit" disabled={editText.length === 0}>
-              save
-            </button>
+              <button
+                className="btn btn-primary ms-2"
+                type="submit"
+                disabled={editText.length === 0}
+              >
+                save
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -113,8 +164,9 @@ function AddNoteModal({
   );
 }
 
-// const matchDispatchToProps = {
+const matchDispatchToProps = {
+  updateNote,
+  addNote,
+};
 
-// }
-
-export default connect(null)(AddNoteModal);
+export default connect(null, matchDispatchToProps)(AddNoteModal);
