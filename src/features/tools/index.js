@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { connect } from "react-redux";
 
 import { setTool } from "features/tools/toolSlice";
-import { DRAW, ERASE, NOTE, POINTER } from "features/tools/constants";
+import { DRAW, ERASE, NOTE, POINTER, TEXT } from "features/tools/constants";
 import { cn } from "utils";
 import DrawSettings from "features/tools/drawSettings";
 
@@ -73,6 +73,17 @@ function Tools({ setTool, cursor }) {
           }}
         >
           <Note />
+        </button>
+        <button
+          type="button"
+          className={cn("btn-clear", styles.toolBtn, cursor === TEXT && styles.active)}
+          data-tooltip="Text (T)"
+          onClick={() => {
+            setShowSettings(false);
+            setTool(TEXT);
+          }}
+        >
+          <span className={styles.text}>T</span>
         </button>
       </div>
     </>

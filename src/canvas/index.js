@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Stage, Rect, Layer } from "react-konva";
 import { connect, ReactReduxContext, Provider } from "react-redux";
+import debounce from "lodash-es/debounce";
 
 // commponents
 import Tools from "features/tools";
@@ -17,8 +18,8 @@ import useDraw from "features/draw/useDraw";
 import bgPattern from "assets/bg-pattern2.png";
 
 // for retina perf, set tip #9 https://konvajs.org/docs/performance/All_Performance_Tips.html
-import Konva from "konva";
-Konva.pixelRatio = 1;
+// import Konva from "konva";
+// Konva.pixelRatio = 1;
 
 function Canvas({ currentTool, setTool, canvasItems, editNote, clearActiveNote }) {
   const { lines, drawMouseDown, drawMouseMove, drawMouseUp, setDrawTool } = useDraw();
@@ -34,6 +35,18 @@ function Canvas({ currentTool, setTool, canvasItems, editNote, clearActiveNote }
   useEffect(() => {
     setDrawTool(currentTool);
   }, [currentTool, setDrawTool]);
+
+  useEffect(() => {
+    function onResize() {
+      setStageDim({ w: window.innerWidth, h: window.innerHeight });
+    }
+    const debouncedResize = debounce(onResize, 25);
+    window.addEventListener("resize", debouncedResize);
+
+    return function cleanup() {
+      window.removeEventListener("resize", debouncedResize);
+    };
+  }, []);
 
   return (
     <>
@@ -68,6 +81,7 @@ function Canvas({ currentTool, setTool, canvasItems, editNote, clearActiveNote }
                   width={stageDim.w}
                   height={stageDim.h}
                   fillPatternImage={bgImage}
+                  listening={false}
                 />
               )}
             </Layer>

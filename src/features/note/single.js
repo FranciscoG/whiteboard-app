@@ -117,7 +117,6 @@ function NoteSingle({ note, updateNote, setActiveNote, currentTool }) {
           fill="#000000"
           align="center"
           verticalAlign="middle"
-          wrap="char"
           fontStyle="bold"
         />
       </Group>

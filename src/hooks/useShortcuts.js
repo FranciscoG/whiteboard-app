@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { KEYS } from "utils/KEYS";
-import { DRAW, ERASE, NOTE, POINTER } from "features/tools/constants";
+import { DRAW, ERASE, NOTE, POINTER, TEXT } from "features/tools/constants";
 
 import { ActionCreators } from "redux-undo";
 import { useDispatch } from "react-redux";
@@ -12,6 +12,7 @@ ACTIONS_MAP[KEYS.p] = DRAW;
 ACTIONS_MAP[KEYS.e] = ERASE;
 ACTIONS_MAP[KEYS.v] = POINTER;
 ACTIONS_MAP[KEYS.n] = NOTE;
+ACTIONS_MAP[KEYS.t] = TEXT;
 
 function useShortcuts() {
   const dispatch = useDispatch();

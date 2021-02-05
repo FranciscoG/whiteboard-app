@@ -69,3 +69,9 @@
   border-bottom: 6px solid transparent;
   border-left: 6px solid gray;
 }
+
+.text {
+  font-size: 40px;
+  line-height: 1;
+  font-family: sans-serif;
+}

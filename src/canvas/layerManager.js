@@ -39,26 +39,12 @@ function Inactive({ tool, notes, lines }) {
 }
 
 function LayerManager({ currentTool, items, lines }) {
-  
   return (
-    <>
-      {/**
-       * Inactive Later so that the whole canvas isn't redrawing for every
-       * single tool
-       */}
-      <Layer>
-        <Inactive tool={currentTool} lines={lines} notes={items.notes} />
-      </Layer>
-
-      {/**
-       * Active layer, only the current active tool should be rendering here
-       * otherwise it will get moved to the inactive layer
-       */}
-      <Layer>
-        <Active tool={currentTool} lines={lines} notes={items.notes} />
-      </Layer>
-    </>
+    <Layer>
+      <Draw lines={lines} />
+      <Notes notes={items.notes} />
+    </Layer>
   );
 }
 
-export default LayerManager
+export default LayerManager;

@@ -14,6 +14,9 @@
   --rioGreen: #2ede5d;
   --rioYellow: #ffd300;
 
+  // whiteboard bg color
+  --bg-color: #f9f9f9;
+
   --primary: var(--rioBlue);
 }
 
@@ -24,6 +27,7 @@ body {
   font-family: sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-color);
 }
 
 .btn-clear {
@@ -38,8 +42,7 @@ body {
     Background pattern: "Polka" 
     from: https://www.magicpattern.design/tools/css-backgrounds/ 
   */
-  // --bg-color: #f9f9f9;
-  // background-color: var(--bg-color);
+  background-color: var(--bg-color);
   // background-image: radial-gradient(#cbcbcb 2px, var(--bg-color) 2px);
   // background-size: 60px 60px;
 }
@@ -50,6 +53,10 @@ body {
 
 .cursor-eraser {
   cursor: url("../assets/icons/square.svg"), pointer;
+}
+
+.cursor-text {
+  cursor: text;
 }
 
 .shadow-light {
