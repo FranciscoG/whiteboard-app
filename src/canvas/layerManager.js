@@ -9,11 +9,11 @@ import { Layer } from "react-konva";
  * - Drawing: This will move all lines to active so that it can erase
  * - Notes: only actively selected if tool is pointer
  */
-function Active({ tool, notes, ...props }) {
+function Active({ tool, notes, lines }) {
   let selectedNote = tool === POINTER ? notes.find((n) => n.selected) : null;
   return (
     <>
-      {(tool === DRAW || tool === ERASE) && <Draw lines={props.lines} />}
+      {(tool === DRAW || tool === ERASE) && <Draw lines={lines} />}
       {selectedNote && <NoteSingle note={selectedNote} />}
     </>
   );
@@ -25,10 +25,10 @@ function Active({ tool, notes, ...props }) {
  * - Drawing: all lines
  * - Notes: only unselected notes or all notes if using any tool other than pointer
  */
-function Inactive({ tool, notes, ...props }) {
+function Inactive({ tool, notes, lines }) {
   return (
     <>
-      {(tool !== DRAW || tool !== ERASE) && <Draw lines={props.lines} />}
+      {(tool !== DRAW || tool !== ERASE) && <Draw lines={lines} />}
       {tool === POINTER ? (
         <Notes notes={notes.filter((n) => !n.selected)} />
       ) : (
@@ -38,7 +38,8 @@ function Inactive({ tool, notes, ...props }) {
   );
 }
 
-function LayerManager({ currentTool, lines = [], notes = [] }) {
+function LayerManager({ currentTool, items, lines }) {
+  
   return (
     <>
       {/**
@@ -46,7 +47,7 @@ function LayerManager({ currentTool, lines = [], notes = [] }) {
        * single tool
        */}
       <Layer>
-        <Inactive tool={currentTool} lines={lines} notes={notes.filter((n) => !n.selected)} />
+        <Inactive tool={currentTool} lines={lines} notes={items.notes} />
       </Layer>
 
       {/**
@@ -54,7 +55,7 @@ function LayerManager({ currentTool, lines = [], notes = [] }) {
        * otherwise it will get moved to the inactive layer
        */}
       <Layer>
-        <Active tool={currentTool} lines={lines} notes={notes.filter((n) => n.selected)} />
+        <Active tool={currentTool} lines={lines} notes={items.notes} />
       </Layer>
     </>
   );

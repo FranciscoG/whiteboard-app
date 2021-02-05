@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { KEYS } from "utils/KEYS";
 import { DRAW, ERASE, NOTE, POINTER } from "features/tools/constants";
 
 import { ActionCreators } from "redux-undo";
 import { useDispatch } from "react-redux";
-import { isEditable } from 'utils';
+import { isEditable } from "utils";
+import { setTool } from "features/tools/toolSlice";
 
 const ACTIONS_MAP = {};
 ACTIONS_MAP[KEYS.p] = DRAW;
@@ -13,13 +14,14 @@ ACTIONS_MAP[KEYS.v] = POINTER;
 ACTIONS_MAP[KEYS.n] = NOTE;
 
 function useShortcuts() {
-  const [shortcut, setShortcut] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
     function onKeyDown(e) {
-      if (isEditable(document.activeElement)) { return; }
-      
+      if (isEditable(document.activeElement)) {
+        return;
+      }
+
       if (e.metaKey && e.shiftKey && e.key === KEYS.z) {
         dispatch(ActionCreators.redo());
         return;
@@ -32,11 +34,13 @@ function useShortcuts() {
     }
 
     function onKeyUp(e) {
-      if (isEditable(document.activeElement)) { return; }
+      if (isEditable(document.activeElement)) {
+        return;
+      }
 
       const matchingAction = ACTIONS_MAP[e.key];
       if (matchingAction) {
-        setShortcut(matchingAction);
+        dispatch(setTool(matchingAction));
       }
     }
 
@@ -48,10 +52,6 @@ function useShortcuts() {
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [dispatch]);
-
-  return {
-    shortcut,
-  };
 }
 
 export default useShortcuts;

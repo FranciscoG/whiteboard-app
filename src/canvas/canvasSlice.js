@@ -32,6 +32,7 @@ const canvasSlice = createSlice({
         return n;
       });
 
+      action.payload.isNew = true;
       state.notes = [...deselected, action.payload];
     },
     updateNote(state, action) {

@@ -1,28 +1,31 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import KEYS from "utils/KEYS";
 import styles from "./modal.module.css";
 
-function Modal({ id, title, hideTitle = false, children, show = false }) {
+const modalContainer = document.getElementById("modal-root");
+
+function Modal({ id, title, hideTitle = false, children, onHide = () => {} }) {
   const dialogRef = useRef(null);
 
   useEffect(() => {
-    function reset() {
+    document.body.classList.add("has-dialog");
+    document.querySelector("#root").setAttribute("aria-hidden", "true");
+
+    return function cleanup() {
       document.body.classList.remove("has-dialog");
       document.querySelector("#root").removeAttribute("aria-hidden");
-    }
+    };
+  }, []);
 
-    if (show) {
-      document.body.classList.add("has-dialog");
-      document.querySelector("#root").setAttribute("aria-hidden", "true");
-    } else {
-      reset();
+  function onBgKeyUp(e) {
+    if (e.key === KEYS.esc) {
+      onHide();
     }
-
-    return reset;
-  }, [show]);
+  }
 
   const content = (
-    <div className={styles.bg}>
+    <div className={styles.bg} onKeyUp={onBgKeyUp}>
       <div
         role="dialog"
         id={id}
@@ -39,7 +42,7 @@ function Modal({ id, title, hideTitle = false, children, show = false }) {
     </div>
   );
 
-  return show && createPortal(content, document.body);
+  return createPortal(content, modalContainer);
 }
 
 export default Modal;

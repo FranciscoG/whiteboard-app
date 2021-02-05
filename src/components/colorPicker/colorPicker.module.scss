@@ -1,0 +1,64 @@
+.fieldset {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+// css inspired by https://www.a11ywithlindsey.com/blog/create-custom-keyboard-accessible-radio-buttons
+// specifically the very last codepen
+
+.radio {
+  opacity: 0;
+  position: relative;
+  z-index: 2;
+
+  + label {
+    /* Hide the text. */
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+
+    cursor: pointer;
+    display: block;
+
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    border: 1px solid #6f686a;
+    width: 28px;
+    height: 28px;
+  }
+
+  &:checked + label {
+    background-image: url(../../assets/icons/check.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 55%;
+
+    @media screen and (-ms-high-contrast: active) {
+      & {
+        background: WindowText;
+      }
+    }
+  }
+
+  &:focus + label {
+    /* The first box shadow makes the border thicker without
+         moving the UI (like border-width would). */
+    box-shadow: 0 0px 0px 1px #6f686a, 0 0px 8px #db3846;
+
+    /* Since box shadows don't show up in high contrast mode,
+         we're adding a transparent outline (which does show up). */
+    outline: 2px dotted transparent;
+  }
+}
+
+// radio wrapper, form-group
+.wrap {
+  margin: 0.2rem 0;
+  position: relative;
+  width: 28px;
+  height: 28px;
+}

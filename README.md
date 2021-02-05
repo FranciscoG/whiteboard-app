@@ -5,25 +5,28 @@ I wanted to challenge myself in being able to build a rich UI experience so I th
 Built using React & [Konva](https://konvajs.org/)
 
 ## Features:
-- draw
-  - change color
-  - change line thickness
-- erase
-- add sticky note
-  - add responsive text to sticky note
-  - selectable and resizable
+- [x] draw
+  - [x] change color
+  - [x] change line thickness
+- [x] erase
+- [x] add sticky note
+  - [x] selectable and resizable
+  - [ ] delete note
 - Free text writing
   - selectable and resizable
-- pan
-- zoom
-- undo
-- redo
-- keyboard shortcuts
-- embed an 
-- store state in localStorage, reload it on page load
+- [x] undo
+- [x] redo
+- [ ] keyboard shortcuts
+- [ ] pan
+- [ ] zoom
+- [ ] embed an image and resize it (url only, no uploading)
+- [ ] store state in localStorage, reload it on page load
 
 ## Roadmap
 - simultaneous mutli-user (needs websocket server)
+- create new public whiteboard like a codepen/fiddle/etc
+  - they
+- 
 
 -----
 ### helpful links:

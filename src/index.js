@@ -1,10 +1,8 @@
 import "styles/global.scss";
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./app/App";
-
-// redux stuff
 import { Provider } from "react-redux";
+import App from "app/App";
 import store from "app/store";
 
 ReactDOM.render(

@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
-import { CirclePicker } from "react-color";
 import { v1 as uuidv1 } from "uuid";
 
 import { updateNote, addNote } from "canvas/canvasSlice";
 
 import Slider from "components/slider";
 import Modal from "components/modal";
+import ColorPicker from "components/colorPicker";
 import { cn } from "utils";
 import styles from "./addNoteModal.module.css";
 
@@ -26,35 +26,38 @@ const defaultNote = {
 };
 
 function AddNoteModal({
-  show = false,
   onSave = () => {},
   onCancel = () => {},
+  onClose = () => {}, // closing for any reason, cancel or save
   note = defaultNote,
   updateNote,
   addNote,
 }) {
-  const [_show, setShow] = useState(show);
   const [editText, setEditText] = useState(note.text);
   const [fontSize, setFontSize] = useState(note.fontSize);
   const [currentColor, setCurrentColor] = useState(note.color);
-  const [pos, setPos] = useState([window.innerWidth / 6, window.innerWidth / 6]);
+  const noteRef = useRef(null);
+  const noteWrapRef = useRef(null);
 
   useEffect(() => {
-    setShow(show);
-  }, [show]);
-
-  function reset() {
-    setEditText("");
-    setCurrentColor(ColorPalette[0]);
-  }
+    if (noteRef.current) {
+      noteRef.current.focus();
+    }
+  }, [noteRef]);
 
   return (
-    <Modal id="addNote" title="Add Sticky Note" hideTitle show={_show}>
+    <Modal
+      id="addNote"
+      title="Add Sticky Note"
+      hideTitle
+      onHide={() => {
+        onClose();
+      }}
+    >
       <div>
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            setShow(false);
 
             const newNote = {
               text: editText,
@@ -62,21 +65,13 @@ function AddNoteModal({
               color: currentColor,
             };
 
-            if (!note.x && !note.y) {
-              const [x, y] = pos;
-              newNote.x = x;
-              newNote.y = y;
-              if (x < window.innerWidth - 400) {
-                setPos([x + 350, y]);
-              } else {
-                setPos([window.innerWidth / 6, y + 350]);
-              }
-            }
-
             if (!note.id) {
               // new note
               newNote.id = uuidv1();
-              // randomly place it x,y
+              newNote.x = window.innerWidth / 5;
+              newNote.y = window.innerHeight / 8;
+              const { x, y } = noteWrapRef.current.getBoundingClientRect();
+              newNote.origin = { x, y };
               addNote(Object.assign({}, note, newNote));
             } else {
               // update to existing note
@@ -84,10 +79,11 @@ function AddNoteModal({
             }
 
             onSave();
-            reset();
+            onClose();
           }}
         >
           <div
+            ref={noteWrapRef}
             style={{ backgroundColor: currentColor }}
             className={cn("form-group", "flex-center", styles.note)}
           >
@@ -96,6 +92,7 @@ function AddNoteModal({
             </label>
             <div className={styles.textContainer}>
               <div
+                ref={noteRef}
                 style={{ fontSize: fontSize + "px" }}
                 role="textbox"
                 aria-multiline="true"
@@ -126,12 +123,12 @@ function AddNoteModal({
                 setFontSize(Number(e.target.value));
               }}
             />
-            <div className={cn("h-center p-2", styles.colors)}>
-              <CirclePicker
-                color={currentColor}
-                colors={ColorPalette}
-                onChangeComplete={({ hex }, e) => {
-                  setCurrentColor(hex);
+            <div className={cn("p-2", styles.colors)}>
+              <ColorPicker
+                selected={currentColor}
+                palette={ColorPalette}
+                onSelectColor={(color) => {
+                  setCurrentColor(color);
                 }}
               />
             </div>
@@ -141,9 +138,8 @@ function AddNoteModal({
                 className="btn btn-secondary"
                 onClick={(e) => {
                   e.preventDefault();
-                  setShow(false);
-                  reset();
                   onCancel();
+                  onClose();
                 }}
               >
                 cancel
