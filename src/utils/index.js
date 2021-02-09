@@ -43,8 +43,23 @@ export function isEditable(el) {
   return false;
 }
 
-export function getDeepestChildAtIndex(startingEl, index) {
+/**
+ * Searches for the deepest child node of a starting parent node and specifically
+ * looking in a specific index
+ */
+export function getDeepestChildAtIndex(startingEl, index = 0) {
   const child = startingEl.children[index];
   if (!child) return startingEl;
   return getDeepestChildAtIndex(child, index);
+}
+
+/**
+ * get a random number between min and max, inclusive
+ * @param {number} min 
+ * @param {number} max 
+ */
+export function ranB(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }

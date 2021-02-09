@@ -51,6 +51,8 @@ function useDraw() {
   }, [linesFromState, setLines]);
 
   const drawMouseDown = (e) => {
+    if (e.evt.button !== 0) return;
+
     isDrawing.current = true;
     const pos = e.target.getStage().getPointerPosition();
 

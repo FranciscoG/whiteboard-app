@@ -1,7 +1,7 @@
 .controls {
-  position: fixed;
-  top: 20%;
-  left: 20px;
+  /* top: 20%; */
+  /* left: 20px; */
+  position: relative;
   width: 74px;
   height: auto;
   padding: 20px 0 10px 0;
@@ -13,6 +13,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: 1;
 }
 
 .toolBtn {

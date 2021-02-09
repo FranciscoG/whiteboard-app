@@ -7,9 +7,25 @@
   /* width: 100vw; */
   height: 100%;
   /* height: 100vh; */
-  background-color: rgba(0,0,0,0.15);
+  background-color: rgba(0, 0, 0, 0);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  transition: background-color 300ms linear;
+}
+
+.bgAppear {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.dialog {
+  transition: flex 350ms ease-out, opacity 350ms linear;
+  flex: 1;
+  opacity: 0;
+}
+
+.appear {
+  flex: 0;
+  opacity: 1;
 }

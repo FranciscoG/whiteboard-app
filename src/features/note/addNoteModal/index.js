@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
-import { v1 as uuidv1 } from "uuid";
 
-import { updateNote, addNote } from "canvas/canvasSlice";
+import { updateNote } from "canvas/canvasSlice";
+import { setNewNote } from "features/note/noteSlice";
 
 import Slider from "components/slider";
 import Modal from "components/modal";
@@ -30,14 +30,18 @@ function AddNoteModal({
   onCancel = () => {},
   onClose = () => {}, // closing for any reason, cancel or save
   note = defaultNote,
+  x,
+  y,
   updateNote,
-  addNote,
+  setNewNote,
 }) {
   const [editText, setEditText] = useState(note.text);
   const [fontSize, setFontSize] = useState(note.fontSize);
   const [currentColor, setCurrentColor] = useState(note.color);
   const noteRef = useRef(null);
   const noteWrapRef = useRef(null);
+
+  const modalRef = useRef(null);
 
   useEffect(() => {
     if (noteRef.current) {
@@ -50,6 +54,7 @@ function AddNoteModal({
       id="addNote"
       title="Add Sticky Note"
       hideTitle
+      ref={modalRef}
       onHide={() => {
         onClose();
       }}
@@ -67,19 +72,18 @@ function AddNoteModal({
 
             if (!note.id) {
               // new note
-              newNote.id = uuidv1();
-              newNote.x = window.innerWidth / 5;
-              newNote.y = window.innerHeight / 8;
-              const { x, y } = noteWrapRef.current.getBoundingClientRect();
-              newNote.origin = { x, y };
-              addNote(Object.assign({}, note, newNote));
+              newNote.x = x;
+              newNote.y = y;
+              const bounds = noteWrapRef.current.getBoundingClientRect();
+              newNote.origin = { x: bounds.x, y: bounds.y };
+              setNewNote(Object.assign({}, note, newNote));
             } else {
               // update to existing note
               updateNote(Object.assign({}, note, newNote));
             }
 
             onSave();
-            onClose();
+            modalRef.current.hide();
           }}
         >
           <div
@@ -139,7 +143,7 @@ function AddNoteModal({
                 onClick={(e) => {
                   e.preventDefault();
                   onCancel();
-                  onClose();
+                  modalRef.current.hide();
                 }}
               >
                 cancel
@@ -162,7 +166,7 @@ function AddNoteModal({
 
 const matchDispatchToProps = {
   updateNote,
-  addNote,
+  setNewNote,
 };
 
 export default connect(null, matchDispatchToProps)(AddNoteModal);

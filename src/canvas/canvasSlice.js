@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { v1 as uuidv1 } from "uuid";
 
 /**
  * This reducer/state will hold on the content placed on the canvas and will
@@ -32,7 +33,7 @@ const canvasSlice = createSlice({
         return n;
       });
 
-      action.payload.isNew = true;
+      action.payload.id = uuidv1();
       state.notes = [...deselected, action.payload];
     },
     updateNote(state, action) {

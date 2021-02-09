@@ -7,24 +7,28 @@ import debounce from "lodash-es/debounce";
 import Tools from "features/tools";
 import AddNoteModal from "features/note/addNoteModal";
 import LayerManager from "canvas/layerManager";
+import Placer from "components/placer";
 
 // state
 import { setTool } from "features/tools/toolSlice";
 import { clearActiveNote } from "features/note/noteSlice";
 
 // other
-import { DRAW, ERASE, NOTE, POINTER } from "features/tools/constants";
+import { DRAW, ERASE, NOTE, POINTER, TEXT } from "features/tools/constants";
 import useDraw from "features/draw/useDraw";
+import usePlacing from "hooks/usePlacing";
 import bgPattern from "assets/bg-pattern2.png";
 
 // for retina perf, set tip #9 https://konvajs.org/docs/performance/All_Performance_Tips.html
 // import Konva from "konva";
 // Konva.pixelRatio = 1;
 
-function Canvas({ currentTool, setTool, canvasItems, editNote, clearActiveNote }) {
+function Canvas({ currentTool, setTool, canvasItems, editNote, clearActiveNote, newNote }) {
   const { lines, drawMouseDown, drawMouseMove, drawMouseUp, setDrawTool } = useDraw();
   const [stageDim, setStageDim] = useState({ w: window.innerWidth, h: window.innerHeight });
   const [bgImageLoadded, setBgImageLoadded] = useState(false);
+  const notePlacing = usePlacing(NOTE === currentTool);
+  const textPlacing = usePlacing(TEXT === currentTool);
 
   const bgImage = new Image();
   bgImage.onload = () => {
@@ -86,19 +90,51 @@ function Canvas({ currentTool, setTool, canvasItems, editNote, clearActiveNote }
               )}
             </Layer>
             <Provider store={store}>
-              <LayerManager currentTool={currentTool} items={canvasItems} lines={lines} />
+              <LayerManager items={canvasItems} lines={lines} newNote={newNote} />
             </Provider>
           </Stage>
         )}
       </ReactReduxContext.Consumer>
+
+      {notePlacing.state.isPlacing && (
+        <Placer
+          width="200"
+          height="200"
+          onFinish={(x, y) => {
+            notePlacing.next(x, y);
+          }}
+          onCancel={() => {
+            notePlacing.reset();
+            setTool(POINTER);
+          }}
+        />
+      )}
+
+      {textPlacing.state.isPlacing && (
+        <Placer
+          width="400"
+          height="80"
+          onFinish={(x, y) => {
+            textPlacing.next(x, y);
+          }}
+          onCancel={() => {
+            textPlacing.reset();
+            setTool(POINTER);
+          }}
+        />
+      )}
+
       <Tools />
 
-      {(currentTool === NOTE || typeof editNote === "object") && (
+      {(notePlacing.state.isPlaced || editNote) && (
         <AddNoteModal
           note={editNote}
+          x={notePlacing.position.x}
+          y={notePlacing.position.y}
           onClose={() => {
             setTool(POINTER);
             clearActiveNote();
+            notePlacing.reset();
           }}
         />
       )}
@@ -110,6 +146,7 @@ const mapStateToProps = (state) => ({
   currentTool: state.tool.cursor,
   canvasItems: state.canvas.present,
   editNote: state.note.activeNote,
+  newNote: state.note.newNote,
 });
 
 const mapDispatchToProps = {
