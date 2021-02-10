@@ -1,27 +1,27 @@
 {
   "files": {
-    "main.css": "/static/css/main.a7e40e74.chunk.css",
-    "main.js": "/static/js/main.2b30738c.chunk.js",
-    "main.js.map": "/static/js/main.2b30738c.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.090bd740.js",
-    "runtime-main.js.map": "/static/js/runtime-main.090bd740.js.map",
-    "static/js/2.131f3665.chunk.js": "/static/js/2.131f3665.chunk.js",
-    "static/js/2.131f3665.chunk.js.map": "/static/js/2.131f3665.chunk.js.map",
-    "index.html": "/index.html",
-    "static/css/main.a7e40e74.chunk.css.map": "/static/css/main.a7e40e74.chunk.css.map",
-    "static/js/2.131f3665.chunk.js.LICENSE.txt": "/static/js/2.131f3665.chunk.js.LICENSE.txt",
-    "static/media/colorPicker.module.scss": "/static/media/check.f3aa198b.svg",
-    "static/media/eraser.svg": "/static/media/eraser.9dd1a1bb.svg",
-    "static/media/draggable.module.scss": "/static/media/grip-horizontal.aa005318.svg",
-    "static/media/mouse-pointer.svg": "/static/media/mouse-pointer.1f069c5a.svg",
-    "static/media/pen.svg": "/static/media/pen.53b750bd.svg",
-    "static/media/global.scss": "/static/media/square.891aa52f.svg",
-    "static/media/sticky-note.svg": "/static/media/sticky-note.9433311d.svg"
+    "main.css": "./static/css/main.746e511f.chunk.css",
+    "main.js": "./static/js/main.2b30738c.chunk.js",
+    "main.js.map": "./static/js/main.2b30738c.chunk.js.map",
+    "runtime-main.js": "./static/js/runtime-main.81d9c54a.js",
+    "runtime-main.js.map": "./static/js/runtime-main.81d9c54a.js.map",
+    "static/js/2.131f3665.chunk.js": "./static/js/2.131f3665.chunk.js",
+    "static/js/2.131f3665.chunk.js.map": "./static/js/2.131f3665.chunk.js.map",
+    "index.html": "./index.html",
+    "static/css/main.746e511f.chunk.css.map": "./static/css/main.746e511f.chunk.css.map",
+    "static/js/2.131f3665.chunk.js.LICENSE.txt": "./static/js/2.131f3665.chunk.js.LICENSE.txt",
+    "static/media/colorPicker.module.scss": "./static/media/check.f3aa198b.svg",
+    "static/media/eraser.svg": "./static/media/eraser.9dd1a1bb.svg",
+    "static/media/draggable.module.scss": "./static/media/grip-horizontal.aa005318.svg",
+    "static/media/mouse-pointer.svg": "./static/media/mouse-pointer.1f069c5a.svg",
+    "static/media/pen.svg": "./static/media/pen.53b750bd.svg",
+    "static/media/global.scss": "./static/media/square.891aa52f.svg",
+    "static/media/sticky-note.svg": "./static/media/sticky-note.9433311d.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.090bd740.js",
+    "static/js/runtime-main.81d9c54a.js",
     "static/js/2.131f3665.chunk.js",
-    "static/css/main.a7e40e74.chunk.css",
+    "static/css/main.746e511f.chunk.css",
     "static/js/main.2b30738c.chunk.js"
   ]
 }
