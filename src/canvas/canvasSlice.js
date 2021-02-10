@@ -9,9 +9,12 @@ const canvasSlice = createSlice({
   name: "canvas",
   initialState: {
     lines: [],
-    notes: [],
+    items: [],
   },
   reducers: {
+    /**************************************************
+     * Drawing lines
+     */
     setLines(state, action) {
       return {
         ...state,
@@ -24,24 +27,36 @@ const canvasSlice = createSlice({
         lines: [...state.lines, action.payload],
       };
     },
-    addNote(state, action) {
+
+    /**************************************************
+     * all other items
+     */
+    addItem(state, action) {
+      if (!action.payload.type) {
+        throw new Error("item is missing a type " + JSON.stringify(action.payload));
+      }
+
       /**
-       * mark any previous selected notes as false
+       * deselect any previous item
        */
-      const deselected = state.notes.map((n) => {
+      const deselected = state.items.map((n) => {
         n.selected = false;
         return n;
       });
 
+      // give new item an id
       action.payload.id = uuidv1();
-      state.notes = [...deselected, action.payload];
+
+      // add item
+      state.items = [...deselected, action.payload];
     },
-    updateNote(state, action) {
+
+    updateItem(state, action) {
       /**
-       * mark any previous selected notes as false
-       * and remove note with matching ID because it will be replaced
+       * deselect any previous item
+       * replace item with matching ID with one in the payload
        */
-      state.notes = state.notes.map((n) => {
+      state.items = state.items.map((n) => {
         n.selected = false;
         if (n.id === action.payload.id) {
           return action.payload;
@@ -49,10 +64,15 @@ const canvasSlice = createSlice({
         return n;
       });
     },
+
+    deleteItem(state) {
+      // delete the currently selected note
+      state.items = state.items.filter((n) => !n.selected);
+    },
   },
 });
 
-export const { setLines, addLine, updateNote, addNote } = canvasSlice.actions;
+export const { setLines, addLine, addItem, updateItem, deleteItem } = canvasSlice.actions;
 
 export const selectLines = (state) => state.canvas.present.lines;
 

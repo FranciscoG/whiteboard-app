@@ -9,6 +9,7 @@ export const KEYS = {
   p : 'p',
   e: 'e',
   z: 'z',
+  t: 't',
   space: ' ',
   plus: '+',
   minus: '-',

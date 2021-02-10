@@ -1,18 +1,20 @@
 import { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
 
-import { updateNote } from "canvas/canvasSlice";
+import { updateItem } from "canvas/canvasSlice";
 import { setNewNote } from "features/note/noteSlice";
 
 import Slider from "components/slider";
 import Modal from "components/modal";
 import ColorPicker from "components/colorPicker";
 import { cn } from "utils";
+import { NOTE } from 'features/tools/constants';
 import styles from "./addNoteModal.module.css";
 
 const ColorPalette = ["#feff9c", "#6ed2d0", "#def350", "#ff6b81", "#ff339a", "#ff992a"];
 
 const defaultNote = {
+  type: NOTE,
   id: null,
   x: null,
   y: null,
@@ -23,6 +25,7 @@ const defaultNote = {
   color: ColorPalette[0],
   scaleX: 0.75,
   scaleY: 0.75,
+  rotation: 0
 };
 
 function AddNoteModal({
@@ -32,7 +35,7 @@ function AddNoteModal({
   note = defaultNote,
   x,
   y,
-  updateNote,
+  updateItem,
   setNewNote,
 }) {
   const [editText, setEditText] = useState(note.text);
@@ -79,7 +82,7 @@ function AddNoteModal({
               setNewNote(Object.assign({}, note, newNote));
             } else {
               // update to existing note
-              updateNote(Object.assign({}, note, newNote));
+              updateItem(Object.assign({}, note, newNote));
             }
 
             onSave();
@@ -152,7 +155,6 @@ function AddNoteModal({
               <button
                 className="btn btn-primary ms-2"
                 type="submit"
-                disabled={editText.length === 0}
               >
                 save
               </button>
@@ -165,7 +167,7 @@ function AddNoteModal({
 }
 
 const matchDispatchToProps = {
-  updateNote,
+  updateItem,
   setNewNote,
 };
 

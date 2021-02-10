@@ -8,22 +8,39 @@ import Tools from "features/tools";
 import AddNoteModal from "features/note/addNoteModal";
 import LayerManager from "canvas/layerManager";
 import Placer from "components/placer";
+import FlyingTextInput from "features/text/flyingTextInput";
 
 // state
 import { setTool } from "features/tools/toolSlice";
 import { clearActiveNote } from "features/note/noteSlice";
+import { addItem, deleteItem, updateItem } from 'canvas/canvasSlice';
+import { clearActiveText } from 'features/text/textSlice'
 
 // other
 import { DRAW, ERASE, NOTE, POINTER, TEXT } from "features/tools/constants";
 import useDraw from "features/draw/useDraw";
 import usePlacing from "hooks/usePlacing";
 import bgPattern from "assets/bg-pattern2.png";
+import KEYS from "utils/KEYS";
 
 // for retina perf, set tip #9 https://konvajs.org/docs/performance/All_Performance_Tips.html
 // import Konva from "konva";
 // Konva.pixelRatio = 1;
 
-function Canvas({ currentTool, setTool, canvasItems, editNote, clearActiveNote, newNote }) {
+function Canvas({
+  currentTool,
+  setTool,
+  canvasItems,
+  editNote,
+  clearActiveNote,
+  newNote,
+  lastShortcut,
+  clearActiveText,
+  editText,
+  deleteItem,
+  addItem,
+  updateItem
+}) {
   const { lines, drawMouseDown, drawMouseMove, drawMouseUp, setDrawTool } = useDraw();
   const [stageDim, setStageDim] = useState({ w: window.innerWidth, h: window.innerHeight });
   const [bgImageLoadded, setBgImageLoadded] = useState(false);
@@ -39,6 +56,12 @@ function Canvas({ currentTool, setTool, canvasItems, editNote, clearActiveNote, 
   useEffect(() => {
     setDrawTool(currentTool);
   }, [currentTool, setDrawTool]);
+
+  useEffect(() => {
+    if (lastShortcut === KEYS.del) {
+      deleteItem()
+    }
+  }, [lastShortcut, deleteItem])
 
   useEffect(() => {
     function onResize() {
@@ -59,6 +82,7 @@ function Canvas({ currentTool, setTool, canvasItems, editNote, clearActiveNote, 
           <Stage
             width={stageDim.w}
             height={stageDim.h}
+            tabIndex={0}
             onMouseDown={(e) => {
               if (currentTool === DRAW || currentTool === ERASE) {
                 drawMouseDown(e);
@@ -90,7 +114,7 @@ function Canvas({ currentTool, setTool, canvasItems, editNote, clearActiveNote, 
               )}
             </Layer>
             <Provider store={store}>
-              <LayerManager items={canvasItems} lines={lines} newNote={newNote} />
+              <LayerManager items={canvasItems.items} lines={lines} newNote={newNote} />
             </Provider>
           </Stage>
         )}
@@ -126,6 +150,41 @@ function Canvas({ currentTool, setTool, canvasItems, editNote, clearActiveNote, 
 
       <Tools />
 
+      {textPlacing.state.isPlaced && (
+        <FlyingTextInput
+          x={textPlacing.position.x}
+          y={textPlacing.position.y}
+          onSave={(text) => {
+            addItem(text);
+            setTool(POINTER);
+            clearActiveText();
+            textPlacing.reset();
+          }}
+          onCancel={() => {
+            setTool(POINTER);
+            clearActiveText();
+            textPlacing.reset();
+          }}
+        />
+      )}
+
+      {editText && (
+        <FlyingTextInput
+          x={editText.x}
+          y={editText.y}
+          textData={editText}
+          onSave={(updatedTextData) => {
+            updateItem(updatedTextData);
+            setTool(POINTER);
+            clearActiveText();
+          }}
+          onCancel={() => {
+            setTool(POINTER);
+            clearActiveText();
+          }}
+        />
+      )}
+
       {(notePlacing.state.isPlaced || editNote) && (
         <AddNoteModal
           note={editNote}
@@ -147,11 +206,16 @@ const mapStateToProps = (state) => ({
   canvasItems: state.canvas.present,
   editNote: state.note.activeNote,
   newNote: state.note.newNote,
+  editText: state.text.activeText
 });
 
 const mapDispatchToProps = {
   setTool,
   clearActiveNote,
+  clearActiveText,
+  deleteItem,
+  addItem,
+  updateItem
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Canvas);

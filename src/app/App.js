@@ -3,11 +3,11 @@ import useShortcuts from "hooks/useShortcuts";
 import Canvas from 'canvas';
 
 function App() {
-  useShortcuts();
+  const { lastShortcut } = useShortcuts();
 
   return (
     <div className="App">
-      <Canvas />
+      <Canvas lastShortcut={lastShortcut}/>
     </div>
   );
 }

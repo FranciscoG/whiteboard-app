@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { KEYS } from "utils/KEYS";
+import { useEffect, useState } from "react";
+import KEYS from "utils/KEYS";
 import { DRAW, ERASE, NOTE, POINTER, TEXT } from "features/tools/constants";
 
 import { ActionCreators } from "redux-undo";
@@ -15,6 +15,7 @@ ACTIONS_MAP[KEYS.n] = NOTE;
 ACTIONS_MAP[KEYS.t] = TEXT;
 
 function useShortcuts() {
+  const [lastShortcut, setLastShortcut] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -43,6 +44,11 @@ function useShortcuts() {
       if (matchingAction) {
         dispatch(setTool(matchingAction));
       }
+
+      setLastShortcut(e.key);
+      setTimeout(() => {
+        setLastShortcut(null);
+      }, 200)
     }
 
     window.addEventListener("keyup", onKeyUp);
@@ -53,6 +59,8 @@ function useShortcuts() {
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [dispatch]);
+
+  return { lastShortcut };
 }
 
 export default useShortcuts;

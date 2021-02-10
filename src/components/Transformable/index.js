@@ -5,6 +5,7 @@ import { Transformer } from "react-konva";
 function Transformable({
   enabled = false,
   onTransformEnd,
+  onTransform = (node, e) => {},
   minWidth = 100,
   minHeight = 100,
   withRef = null,
@@ -12,10 +13,10 @@ function Transformable({
 
   /**
    * opinionated Transform option defaults
-   */ 
+   */
   anchors = ["top-left", "top-right", "bottom-right", "bottom-left"],
   keepRatio = true,
-  rotateEnabled = false,
+  rotateEnabled = true,
 
   /**
    * see docs for more Transformer options
@@ -44,10 +45,18 @@ function Transformable({
     onTransformEnd(nodeRef.current, e);
   }
 
+  function duringTransform(e) {
+    onTransform(nodeRef.current, e);
+  }
+
   return (
     <>
       {/* Transformable only works on a single child */}
-      {React.Children.only(children) && React.cloneElement(children, { ref: nodeRef, onEnd })}
+      {React.cloneElement(children, {
+        ref: nodeRef,
+        onTransformEnd: onEnd,
+        onTransform: duringTransform,
+      })}
 
       {enabled && (
         <Transformer
@@ -115,7 +124,7 @@ Transformable.propTypes = {
   /**
    * Must be a single child and a Konva react element
    */
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 };
 
 export default Transformable;
