@@ -31,6 +31,7 @@
     "eject": "react-scripts eject",
     "deploy": "npm run build && git add build && git ci -am 'new build' && git push origin :gh-pages && git subtree push --prefix build origin gh-pages"
   },
+  "homepage": ".",
   "eslintConfig": {
     "extends": [
       "react-app",
