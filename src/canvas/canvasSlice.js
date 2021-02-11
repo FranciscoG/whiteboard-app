@@ -69,10 +69,23 @@ const canvasSlice = createSlice({
       // delete the currently selected note
       state.items = state.items.filter((n) => !n.selected);
     },
+    clearSelected(state) {
+      state.items = state.items.map((n) => {
+        n.selected = false;
+        return n;
+      });
+    },
   },
 });
 
-export const { setLines, addLine, addItem, updateItem, deleteItem } = canvasSlice.actions;
+export const {
+  setLines,
+  addLine,
+  addItem,
+  updateItem,
+  deleteItem,
+  clearSelected,
+} = canvasSlice.actions;
 
 export const selectLines = (state) => state.canvas.present.lines;
 
