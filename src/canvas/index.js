@@ -13,8 +13,8 @@ import FlyingTextInput from "features/text/flyingTextInput";
 // state
 import { setTool } from "features/tools/toolSlice";
 import { clearActiveNote } from "features/note/noteSlice";
-import { addItem, deleteItem, updateItem } from 'canvas/canvasSlice';
-import { clearActiveText } from 'features/text/textSlice'
+import { addItem, deleteItem, updateItem, clearSelected } from "canvas/canvasSlice";
+import { clearActiveText } from "features/text/textSlice";
 
 // other
 import { DRAW, ERASE, NOTE, POINTER, TEXT } from "features/tools/constants";
@@ -39,7 +39,8 @@ function Canvas({
   editText,
   deleteItem,
   addItem,
-  updateItem
+  updateItem,
+  clearSelected,
 }) {
   const { lines, drawMouseDown, drawMouseMove, drawMouseUp, setDrawTool } = useDraw();
   const [stageDim, setStageDim] = useState({ w: window.innerWidth, h: window.innerHeight });
@@ -59,9 +60,19 @@ function Canvas({
 
   useEffect(() => {
     if (lastShortcut === KEYS.del) {
-      deleteItem()
+      deleteItem();
+      return;
     }
-  }, [lastShortcut, deleteItem])
+    if (lastShortcut === KEYS.esc) {
+      if (notePlacing.state.isPlacing) {
+        notePlacing.reset();
+      } else if (textPlacing.state.isPlacing) {
+        textPlacing.reset();
+      } else if (canvasItems.items.find((e) => e.selected)) {
+        clearSelected();
+      }
+    }
+  }, [lastShortcut, deleteItem, notePlacing, textPlacing, canvasItems.items, clearSelected]);
 
   useEffect(() => {
     function onResize() {
@@ -74,6 +85,17 @@ function Canvas({
       window.removeEventListener("resize", debouncedResize);
     };
   }, []);
+
+  useEffect(() => {
+    if (currentTool !== TEXT && textPlacing.state.isPlacing) {
+      textPlacing.reset();
+      return;
+    }
+
+    if (currentTool !== NOTE && notePlacing.state.isPlacing) {
+      notePlacing.reset();
+    }
+  }, [currentTool, notePlacing, textPlacing]);
 
   return (
     <>
@@ -206,7 +228,7 @@ const mapStateToProps = (state) => ({
   canvasItems: state.canvas.present,
   editNote: state.note.activeNote,
   newNote: state.note.newNote,
-  editText: state.text.activeText
+  editText: state.text.activeText,
 });
 
 const mapDispatchToProps = {
@@ -215,7 +237,8 @@ const mapDispatchToProps = {
   clearActiveText,
   deleteItem,
   addItem,
-  updateItem
+  updateItem,
+  clearSelected,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Canvas);
