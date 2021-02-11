@@ -63,3 +63,10 @@ export function ranB(min, max) {
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+/**
+ * round to the nearest hundredths decimal place
+ * src: https://stackoverflow.com/a/11832950
+ * @param {number} num 
+ */
+export const round100th = num => Math.round((num + Number.EPSILON) * 100) / 100
