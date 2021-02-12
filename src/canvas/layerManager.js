@@ -19,17 +19,12 @@ function DrawItem({ item }) {
  * TODO: merge state into one array so that order can be manipulated
  */
 function LayerManager({ items, lines, newNote }) {
-  const selected = items.find((e) => e.selected);
-
   return (
     <Layer>
       <Draw lines={lines} />
-      {items
-        .filter((e) => !e.selected)
-        .map((item) => (
-          <DrawItem item={item} key={item.id} />
-        ))}
-      {selected && <DrawItem item={selected} />}
+      {items.map((item) => (
+        <DrawItem item={item} key={item.id} />
+      ))}
       {newNote && <Note note={newNote} />}
     </Layer>
   );

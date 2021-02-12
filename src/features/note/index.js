@@ -18,6 +18,8 @@ export const notePropTypes = PropTypes.shape({
   scaleX: PropTypes.number,
   scaleY: PropTypes.number,
   rotation: PropTypes.number,
+  align: PropTypes.string,
+  verticalAlign: PropTypes.string
 });
 
 function Note({ note, setActiveNote, currentTool, clearNewNote, addItem, updateItem }) {
@@ -109,12 +111,13 @@ function Note({ note, setActiveNote, currentTool, clearNewNote, addItem, updateI
         <Text
           width={note.width}
           height={note.height}
+          padding={10}
           text={note.text}
           fontSize={note.fontSize}
           fontFamily="sans-serif"
           fill="#000000"
-          align="center"
-          verticalAlign="middle"
+          align={note.align}
+          verticalAlign={note.verticalAlign}
           fontStyle="bold"
         />
       </Group>

@@ -1,8 +1,11 @@
+import { useRef } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Text } from "react-konva";
+import debounce from "lodash-es/debounce";
 import { updateItem } from "canvas/canvasSlice";
 import { setActiveText } from "features/text/textSlice";
+import { round100th } from "utils";
 import { POINTER } from "features/tools/constants";
 import Transformable from "components/Transformable";
 
@@ -21,6 +24,8 @@ export const textPropTypes = PropTypes.shape({
 });
 
 function TextSingle({ data, updateItem, setActiveText, currentTool, currentActiveText }) {
+  const lastScale = useRef({ scaleX: 1, scaleY: 1 });
+
   function onClick(e) {
     /* handle double-click which puts the text into edit mode */
     if (e.evt.detail === 2) {
@@ -48,14 +53,39 @@ function TextSingle({ data, updateItem, setActiveText, currentTool, currentActiv
   }
 
   function onTransformEnd(node) {
+    const scaleX = round100th(node.scaleX());
+    const scaleY = round100th(node.scaleY());
+
     updateItem({
       ...data,
       x: node.x(),
       y: node.y(),
-      width: node.width(),
-      height: node.height()
+      scaleX,
+      scaleY,
+      rotation: node.rotation(),
+      // width: node.width(),
     });
   }
+
+  const onTransform = debounce((node) => {
+    const scaleX = round100th(node.scaleX());
+    const scaleY = round100th(node.scaleY());
+    // console.log(scaleX, scaleY, lastScale.current);
+
+    if (scaleX === lastScale.current.scaleX && scaleY === lastScale.current.scaleY) {
+      return;
+    }
+
+    if (scaleX !== lastScale.current.scaleX && scaleY === lastScale.current.scaleY) {
+      node.setAttrs({
+        scaleX: lastScale.current.scaleX,
+        width: Math.max(node.width() * scaleX, 40),
+      });
+      return;
+    }
+
+    lastScale.current = { scaleX, scaleY };
+  }, 5);
 
   return (
     <Transformable
@@ -64,24 +94,16 @@ function TextSingle({ data, updateItem, setActiveText, currentTool, currentActiv
         "top-right",
         "bottom-left",
         "bottom-right",
-        "top-center",
-        "bottom-center",
         "middle-left",
         "middle-right",
       ]}
-      keepRatio={false}
+      // anchorCornerRadius={5}
+      minWidth={40}
+      minHeight={40}
+      keepRatio={true}
       enabled={data.selected && currentTool === POINTER && currentActiveText?.id !== data.id}
       onTransformEnd={onTransformEnd}
-      onTransform={(node) => {
-        const w = Math.max(node.width() * node.scaleX(), 40);
-        const h = Math.max(node.height() * node.scaleY(), 40);
-        node.setAttrs({
-          width: w,
-          height: h,
-          scaleX: 1,
-          scaleY: 1,
-        });
-      }}
+      onTransform={onTransform}
     >
       <Text
         draggable={currentTool === POINTER}
@@ -95,7 +117,7 @@ function TextSingle({ data, updateItem, setActiveText, currentTool, currentActiv
         scaleY={data.scaleY}
         width={data.width}
         height={data.height}
-        text={currentActiveText?.id === data.id ? '' : data.text}
+        text={currentActiveText?.id === data.id ? "" : data.text}
         fontSize={data.fontSize}
         fontFamily="sans-serif"
         fill="#000000"
@@ -117,7 +139,7 @@ TextSingle.propTypes = {
 
 const mapStateToProps = (state) => ({
   currentTool: state.tool.cursor,
-  currentActiveText: state.text.activeText
+  currentActiveText: state.text.activeText,
 });
 
 const matchDispatchToProps = {

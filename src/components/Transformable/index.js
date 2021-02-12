@@ -28,7 +28,7 @@ function Transformable({
   const trRef = useRef(null);
 
   useEffect(() => {
-    if (enabled) {
+    if (enabled && trRef.current) {
       // we need to attach transformer manually
       trRef.current.nodes([nodeRef.current]);
       trRef.current.getLayer().batchDraw();

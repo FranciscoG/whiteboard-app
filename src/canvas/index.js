@@ -59,7 +59,7 @@ function Canvas({
   }, [currentTool, setDrawTool]);
 
   useEffect(() => {
-    if (lastShortcut === KEYS.del) {
+    if (lastShortcut === KEYS.del || lastShortcut === KEYS.backspace) {
       deleteItem();
       return;
     }
@@ -108,6 +108,9 @@ function Canvas({
             onMouseDown={(e) => {
               if (currentTool === DRAW || currentTool === ERASE) {
                 drawMouseDown(e);
+              }
+              if (e.target.constructor.name === "Stage" || e.target.constructor.name === "Line") {
+                clearSelected();
               }
             }}
             onMousemove={(e) => {

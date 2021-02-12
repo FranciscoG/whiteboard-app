@@ -12,11 +12,11 @@ Built using React & [Konva](https://konvajs.org/)
 - [x] add sticky note
   - [x] selectable and resizable
   - [ ] delete note
-- Free text writing
-  - selectable and resizable
+- [x] Free text writing
+  - [ ]selectable and resizable
 - [x] undo
 - [x] redo
-- [ ] keyboard shortcuts
+- [x] keyboard shortcuts
 - [ ] pan
 - [ ] zoom
 - [ ] embed an image and resize it (url only, no uploading)
@@ -36,3 +36,5 @@ https://redux.js.org/recipes/implementing-undo-history#using-redux-undo
 https://casesandberg.github.io/react-color/
 
 [Font-Awesome 5 Free icons](https://fontawesome.com/icons?d=gallery&m=free)
+
+[Entypo Fonts](http://www.entypo.com/) via IconMoon

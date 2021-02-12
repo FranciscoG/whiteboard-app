@@ -7,8 +7,10 @@ import { setNewNote } from "features/note/noteSlice";
 import Slider from "components/slider";
 import Modal from "components/modal";
 import ColorPicker from "components/colorPicker";
+import Alignment from "components/alignment";
+
 import { cn } from "utils";
-import { NOTE } from 'features/tools/constants';
+import { NOTE } from "features/tools/constants";
 import styles from "./addNoteModal.module.css";
 
 const ColorPalette = ["#feff9c", "#6ed2d0", "#def350", "#ff6b81", "#ff339a", "#ff992a"];
@@ -25,7 +27,9 @@ const defaultNote = {
   color: ColorPalette[0],
   scaleX: 0.75,
   scaleY: 0.75,
-  rotation: 0
+  rotation: 0,
+  align: "center",
+  verticalAlign: "middle",
 };
 
 function AddNoteModal({
@@ -41,6 +45,8 @@ function AddNoteModal({
   const [editText, setEditText] = useState(note.text);
   const [fontSize, setFontSize] = useState(note.fontSize);
   const [currentColor, setCurrentColor] = useState(note.color);
+  const [textHoriz, setTextHoriz] = useState(note.align);
+  const [textVert, setTextVert] = useState(note.verticalAlign);
   const noteRef = useRef(null);
   const noteWrapRef = useRef(null);
 
@@ -71,6 +77,8 @@ function AddNoteModal({
               text: editText,
               fontSize,
               color: currentColor,
+              align: textHoriz,
+              verticalAlign: textVert
             };
 
             if (!note.id) {
@@ -100,7 +108,12 @@ function AddNoteModal({
             <div className={styles.textContainer}>
               <div
                 ref={noteRef}
-                style={{ fontSize: fontSize + "px" }}
+                style={{
+                  fontSize: fontSize + "px",
+                  // @ts-ignore
+                  textAlign: textHoriz,
+                  verticalAlign: textVert
+                }}
                 role="textbox"
                 aria-multiline="true"
                 aria-labelledby="stickyNoteLabel"
@@ -130,6 +143,17 @@ function AddNoteModal({
                 setFontSize(Number(e.target.value));
               }}
             />
+            <Alignment
+              className="mb-3"
+              selectedHorizontal={textHoriz}
+              selectedVertical={textVert}
+              onChangeHorizontal={(newAlignment) => {
+                setTextHoriz(newAlignment);
+              }}
+              onChangeVertical={(newAlignment) => {
+                setTextVert(newAlignment);
+              }}
+            />
             <div className={cn("p-2", styles.colors)}>
               <ColorPicker
                 selected={currentColor}
@@ -152,10 +176,7 @@ function AddNoteModal({
                 cancel
               </button>
 
-              <button
-                className="btn btn-primary ms-2"
-                type="submit"
-              >
+              <button className="btn btn-primary ms-2" type="submit">
                 save
               </button>
             </div>

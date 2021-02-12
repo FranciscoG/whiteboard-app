@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import PropTypes from "prop-types";
 import Draggable from "components/draggable";
 import KEYS from "utils/KEYS";
@@ -21,24 +21,16 @@ const defaultText = {
 };
 
 function FlyingTextInput({ x = 0, y = 0, textData = defaultText, onSave, onCancel }) {
-  const positionRef = useRef({x, y});
+  const positionRef = useRef({ x, y });
   const inputRef = useRef(null);
 
   function onKeyUp(e) {
-    if (e.key === KEYS.enter) {
-      // onSave(e.target.value);
-    } else if (e.key === KEYS.esc) {
+    if (e.key === KEYS.esc) {
       onCancel();
     }
   }
 
-  const styleObj =
-    textData.width && textData.height
-      ? { width: textData.width, height: textData.height }
-      : {
-          width: 400,
-          height: 58,
-        };
+  const styleObj = textData.width ? { width: textData.width } : { width: 400 };
 
   return (
     <Draggable
@@ -48,7 +40,7 @@ function FlyingTextInput({ x = 0, y = 0, textData = defaultText, onSave, onCance
       startY={y - 25}
       onDragEnd={(pos) => {
         positionRef.current = pos;
-        console.log(positionRef.current, pos)
+        console.log(positionRef.current, pos);
       }}
     >
       <form className={styles.inputContainer}>

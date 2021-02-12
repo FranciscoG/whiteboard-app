@@ -4,16 +4,19 @@ import { useState, useEffect } from "react";
 const states = [
   // idle state
   {
+    isIdle: true,
     isPlacing: false,
     isPlaced: false,
   },
   // active state
   {
+    isIdle: false,
     isPlacing: true,
     isPlaced: false,
   },
   // completed state
   {
+    isIdle: false,
     isPlacing: false,
     isPlaced: true,
   },

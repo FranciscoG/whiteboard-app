@@ -34,7 +34,8 @@ function Tools({ setTool, cursor }) {
             setTool(POINTER);
           }}
         >
-          <Pointer />
+          <Pointer aria-hidden="true" />
+          <span className="visually-hidden">Select tool</span>
         </button>
         <button
           id={`tool-${DRAW}`}
@@ -52,6 +53,7 @@ function Tools({ setTool, cursor }) {
           }}
         >
           <Pen />
+          <span className="visually-hidden">Pen tool</span>
           <span className={styles.arrowSubMenu}/>
         </button>
         <DrawSettings show={cursor === DRAW && showSettings}  />
@@ -66,6 +68,7 @@ function Tools({ setTool, cursor }) {
           }}
         >
           <Eraser />
+          <span className="visually-hidden">Eraser tool</span>
         </button>
         <button
           id={`tool-${NOTE}`}
@@ -78,6 +81,7 @@ function Tools({ setTool, cursor }) {
           }}
         >
           <Note />
+          <span className="visually-hidden">Add a sticky note to the canvas</span>
         </button>
         <button
           id={`tool-${TEXT}`}
@@ -89,7 +93,8 @@ function Tools({ setTool, cursor }) {
             setTool(TEXT);
           }}
         >
-          <span className={styles.text}>T</span>
+          <span aria-hidden="true" className={styles.text}>T</span>
+          <span className="visually-hidden">Add text to the canvas</span>
         </button>
       </div>
     </Draggable>

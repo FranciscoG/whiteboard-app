@@ -171,7 +171,7 @@ function Draggable({ id, children, startX = 0, startY = 0, onDragEnd = ({x,y}) =
   return (
     <div className={cn(styles.dragContainer)} style={{ top: `${y}px`, left: `${x}px` }}>
       <span id={id} className="visually-hidden">
-        Press Spacebar to Grab
+        Press space bar to grab
       </span>
       <button
         className={styles.handle}
