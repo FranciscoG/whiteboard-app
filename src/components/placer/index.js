@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+// import PropTypes from "prop-types";
 import { ACTIONS } from "utils/KEYS";
 import styles from "./index.module.scss";
 

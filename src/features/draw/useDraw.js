@@ -24,22 +24,23 @@ function connectPoints(e, tool, lines) {
   return Array.from(lines);
 }
 
-
-
 /**
  * useDraw hook
  * for better performance this hook keeps the lines in its own internal state and
  * updates global redux state only on MouseUp.
  */
 function useDraw() {
-  const [tool, setTool] = useState(DRAW);
   const [lines, setLines] = useState([]);
   const isDrawing = useRef(false);
   const isMoving = useRef(false);
   const dispatch = useDispatch();
 
+  // @ts-ignore
   const color = useSelector((state) => state.tool.draw.color);
+  // @ts-ignore
   const thickness = useSelector((state) => state.tool.draw.thickness);
+  // @ts-ignore
+  const tool = useSelector((state) => state.tool.cursor);
   const linesFromState = useSelector(selectLines);
 
   /**
@@ -62,7 +63,12 @@ function useDraw() {
       setLines(newLines);
     } else {
       const newLines = Array.from(lines);
-      newLines.push({ tool, color, thickness, points: [pos.x + eraserOffset, pos.y + eraserOffset] });
+      newLines.push({
+        tool,
+        color,
+        thickness,
+        points: [pos.x + eraserOffset, pos.y + eraserOffset],
+      });
       setLines(newLines);
     }
   };
@@ -95,7 +101,6 @@ function useDraw() {
     drawMouseDown,
     drawMouseMove,
     drawMouseUp,
-    setDrawTool: setTool,
   };
 }
 

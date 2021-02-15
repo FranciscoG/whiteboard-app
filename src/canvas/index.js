@@ -42,7 +42,7 @@ function Canvas({
   updateItem,
   clearSelected,
 }) {
-  const { lines, drawMouseDown, drawMouseMove, drawMouseUp, setDrawTool } = useDraw();
+  const { lines, drawMouseDown, drawMouseMove, drawMouseUp } = useDraw();
   const [stageDim, setStageDim] = useState({ w: window.innerWidth, h: window.innerHeight });
   const [bgImageLoadded, setBgImageLoadded] = useState(false);
   const notePlacing = usePlacing(NOTE === currentTool);
@@ -54,10 +54,24 @@ function Canvas({
   };
   bgImage.src = bgPattern;
 
+  /**
+   * ComponentDidMount effect
+   */
   useEffect(() => {
-    setDrawTool(currentTool);
-  }, [currentTool, setDrawTool]);
+    function onResize() {
+      setStageDim({ w: window.innerWidth, h: window.innerHeight });
+    }
+    const debouncedResize = debounce(onResize, 25);
+    window.addEventListener("resize", debouncedResize);
 
+    return function cleanup() {
+      window.removeEventListener("resize", debouncedResize);
+    };
+  }, []);
+
+  /**
+   * This effect handles changes in the last shortcut key
+   */
   useEffect(() => {
     if (lastShortcut === KEYS.del || lastShortcut === KEYS.backspace) {
       deleteItem();
@@ -74,18 +88,10 @@ function Canvas({
     }
   }, [lastShortcut, deleteItem, notePlacing, textPlacing, canvasItems.items, clearSelected]);
 
-  useEffect(() => {
-    function onResize() {
-      setStageDim({ w: window.innerWidth, h: window.innerHeight });
-    }
-    const debouncedResize = debounce(onResize, 25);
-    window.addEventListener("resize", debouncedResize);
-
-    return function cleanup() {
-      window.removeEventListener("resize", debouncedResize);
-    };
-  }, []);
-
+  /**
+   * This effect handles reseting any Placers when canceling by switching to a
+   * different tool
+   */
   useEffect(() => {
     if (currentTool !== TEXT && textPlacing.state.isPlacing) {
       textPlacing.reset();
@@ -147,10 +153,10 @@ function Canvas({
 
       {notePlacing.state.isPlacing && (
         <Placer
-          width="200"
-          height="200"
+          width={300 * 0.75}
+          height={300 * 0.75}
           onFinish={(x, y) => {
-            notePlacing.next(x, y);
+            notePlacing.placed(x, y);
           }}
           onCancel={() => {
             notePlacing.reset();
@@ -164,7 +170,7 @@ function Canvas({
           width="400"
           height="80"
           onFinish={(x, y) => {
-            textPlacing.next(x, y);
+            textPlacing.placed(x, y);
           }}
           onCancel={() => {
             textPlacing.reset();

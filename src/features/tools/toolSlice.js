@@ -13,17 +13,31 @@ const toolSlice = createSlice({
   },
   reducers: {
     setTool(state, action) {
-      state.cursor = action.payload
+      state.cursor = action.payload;
     },
     setDrawColor(state, action) {
-      state.draw.color = action.payload
+      state.draw.color = action.payload;
     },
     setDrawThickness(state, action) {
-      state.draw.thickness = action.payload
+      state.draw.thickness = action.payload;
+    },
+    incrementThickness(state) {
+      if (state.draw.thickness === 40) return;
+      state.draw.thickness = state.draw.thickness + 1;
+    },
+    decrementThickness(state) {
+      if (state.draw.thickness === 1) return;
+      state.draw.thickness = state.draw.thickness - 1;
     },
   },
 });
 
-export const { setTool, setDrawColor, setDrawThickness } = toolSlice.actions;
+export const {
+  setTool,
+  setDrawColor,
+  setDrawThickness,
+  incrementThickness,
+  decrementThickness,
+} = toolSlice.actions;
 
 export default toolSlice.reducer;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { cn } from "utils";
 import styles from "./slider.module.css";
@@ -16,6 +16,10 @@ function Slider({
   className,
 }) {
   const [value, setValue] = useState(startingValue);
+
+  useEffect(() => {
+    setValue(startingValue)
+  }, [startingValue])
 
   return (
     <div className={cn("form-control", className, styles.container)}>

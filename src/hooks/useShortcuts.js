@@ -5,7 +5,7 @@ import { DRAW, ERASE, NOTE, POINTER, TEXT } from "features/tools/constants";
 import { ActionCreators } from "redux-undo";
 import { useDispatch } from "react-redux";
 import { isEditable } from "utils";
-import { setTool } from "features/tools/toolSlice";
+import { setTool, incrementThickness, decrementThickness } from "features/tools/toolSlice";
 
 const ACTIONS_MAP = {};
 ACTIONS_MAP[KEYS.p] = DRAW;
@@ -33,6 +33,12 @@ function useShortcuts() {
         dispatch(ActionCreators.undo());
         return;
       }
+
+      if (e.key === KEYS["["]) {
+        dispatch(decrementThickness());
+      } else if (e.key === KEYS["]"]) {
+        dispatch(incrementThickness());
+      }
     }
 
     function onKeyUp(e) {
@@ -48,7 +54,7 @@ function useShortcuts() {
       setLastShortcut(e.key);
       setTimeout(() => {
         setLastShortcut(null);
-      }, 200)
+      }, 200);
     }
 
     window.addEventListener("keyup", onKeyUp);

@@ -10,7 +10,7 @@ import styles from "./draggable.module.scss";
  * TODO: Aria live region
  */
 
-function Draggable({ id, children, startX = 0, startY = 0, onDragEnd = ({x,y}) => {} }) {
+function Draggable({ id, title, children, startX = 0, startY = 0, onDragEnd = ({x,y}) => {} }) {
   const childRef = useRef(null);
   const isDragging = useRef(false);
   const isUsingKeys = useRef(null);
@@ -179,7 +179,7 @@ function Draggable({ id, children, startX = 0, startY = 0, onDragEnd = ({x,y}) =
         onKeyUp={onKeyUp}
         aria-describedby={id}
       >
-        <span className="visually-hidden">Move {id} on the canvas</span>
+        <span className="visually-hidden">{title}</span>
       </button>
 
       {/* There should only be one child */}
@@ -189,7 +189,15 @@ function Draggable({ id, children, startX = 0, startY = 0, onDragEnd = ({x,y}) =
 }
 
 Draggable.propTypes = {
+  /**
+   * ID to link a11y description to button
+   */
   id: PropTypes.string.isRequired,
+
+  /**
+   * title 
+   */
+  title: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   startX: PropTypes.number,
   startY: PropTypes.number,

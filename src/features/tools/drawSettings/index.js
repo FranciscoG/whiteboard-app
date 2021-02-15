@@ -3,7 +3,7 @@ import { TwitterPicker as ColorPicker } from "react-color";
 import { cn } from "utils";
 import Slider from "components/slider";
 import { setDrawColor, setDrawThickness } from "features/tools/toolSlice";
-import { lineColors } from 'features/tools/constants';
+import { lineColors } from "features/tools/constants";
 import styles from "./drawSettings.module.css";
 
 function DrawSettings({ show = false, draw, setDrawColor, setDrawThickness }) {

@@ -1,61 +1,88 @@
-import { useRef } from "react";
-import { useState, useEffect } from "react";
+import { useReducer } from "react";
+import { useEffect } from "react";
 
-const states = [
-  // idle state
-  {
+const initialState = {
+  status: {
     isIdle: true,
     isPlacing: false,
     isPlaced: false,
   },
-  // active state
-  {
-    isIdle: false,
-    isPlacing: true,
-    isPlaced: false,
-  },
-  // completed state
-  {
-    isIdle: false,
-    isPlacing: false,
-    isPlaced: true,
-  },
-];
+  position: { x: 0, y: 0 },
+};
+
+/**
+ * @param {initialState} state
+ * @param {{type: 'IDLE' | 'PLACING' | 'PLACED', payload?: {x: number, y: number}}} action
+ */
+function placeReducer(state, action) {
+  switch (action.type) {
+    case "IDLE": {
+      return {
+        ...state,
+        status: {
+          isIdle: true,
+          isPlacing: false,
+          isPlaced: false,
+        },
+      };
+    }
+    case "PLACING": {
+      return {
+        ...state,
+        status: {
+          isIdle: false,
+          isPlacing: true,
+          isPlaced: false,
+        },
+      };
+    }
+    case "PLACED": {
+      return {
+        position: action.payload,
+        status: {
+          isIdle: false,
+          isPlacing: false,
+          isPlaced: true,
+        },
+      };
+    }
+    default: {
+      throw new Error(`Unhandled action: ${action}`);
+    }
+  }
+}
 
 function usePlacing(enabled = false) {
-  const index = useRef(0)
-  const [currentState, setCurrentState] = useState(states[index.current]);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [state, dispatch] = useReducer(placeReducer, initialState);
 
   function reset() {
-    index.current = 0;
-    setCurrentState(states[0]);
+    dispatch({ type: "IDLE" });
   }
 
-  function next(x, y) {
-    if (x && y) {
-      setPosition({ x, y });
-    }
-    if (index.current === states.length - 1) {
-      reset();
-    } else {
-      index.current = index.current + 1;
-      setCurrentState(states[index.current]);
-    }
+  /**
+   * put into PLACED state and also set x,y position coordinates
+   * @param {number} x
+   * @param {number} y
+   */
+  function placed(x, y) {
+    dispatch({ type: "PLACED", payload:{ x, y } });
   }
 
+  /**
+   * Listens for changes in the enabled argument and puts into placing
+   * state if enabled is true.
+   */
   useEffect(() => {
     if (enabled) {
-      index.current = 1;
-      setCurrentState(states[1]);
+      dispatch({ type: "PLACING" });
     }
   }, [enabled]);
 
   return {
-    state: currentState,
+    state: state.status,
+    position: state.position,
     reset,
-    position,
-    next,
+    placed,
   };
 }
 

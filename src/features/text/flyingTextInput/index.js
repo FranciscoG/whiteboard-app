@@ -35,6 +35,7 @@ function FlyingTextInput({ x = 0, y = 0, textData = defaultText, onSave, onCance
   return (
     <Draggable
       id="flyingTextInput"
+      title="Move text input anywhere on the canvas"
       startX={x}
       // 20px padding-top of container + 5px padTop of input
       startY={y - 25}
