@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import Draggable from "components/draggable";
 import KEYS from "utils/KEYS";
@@ -21,8 +21,9 @@ const defaultText = {
 };
 
 function FlyingTextInput({ x = 0, y = 0, textData = defaultText, onSave, onCancel }) {
-  const positionRef = useRef({ x, y });
-  const inputRef = useRef(null);
+  const [position, setPosition] = useState({ x, y });
+
+  console.log(position, 'flyingtext render')
 
   function onKeyUp(e) {
     if (e.key === KEYS.esc) {
@@ -40,8 +41,8 @@ function FlyingTextInput({ x = 0, y = 0, textData = defaultText, onSave, onCance
       // 20px padding-top of container + 5px padTop of input
       startY={y - 25}
       onDragEnd={(pos) => {
-        positionRef.current = pos;
-        console.log(positionRef.current, pos);
+        console.log(pos, 'flyingtext input drag end')
+        setPosition(pos);
       }}
     >
       <form className={styles.inputContainer}>
@@ -50,7 +51,6 @@ function FlyingTextInput({ x = 0, y = 0, textData = defaultText, onSave, onCance
         </label>
         <div
           style={styleObj}
-          ref={inputRef}
           autoCorrect="off"
           autoCapitalize="off"
           role="textbox"
@@ -66,11 +66,10 @@ function FlyingTextInput({ x = 0, y = 0, textData = defaultText, onSave, onCance
               onCancel();
               return;
             }
-            const rect = inputRef.current.getBoundingClientRect();
+            const rect = e.target.getBoundingClientRect();
             onSave({
               ...textData,
-              x: positionRef.current.x,
-              y: positionRef.current.y,
+              ...position,
               width: rect.width,
               height: rect.height,
               text: e.target.textContent,

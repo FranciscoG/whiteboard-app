@@ -38,7 +38,7 @@ function placeReducer(state, action) {
     }
     case "PLACED": {
       return {
-        position: action.payload,
+        position: { ...action.payload },
         status: {
           isIdle: false,
           isPlacing: false,
@@ -52,7 +52,7 @@ function placeReducer(state, action) {
   }
 }
 
-function usePlacing(enabled = false) {
+function usePlacing(toolName, currentTool) {
   const [state, dispatch] = useReducer(placeReducer, initialState);
 
   function reset() {
@@ -65,18 +65,23 @@ function usePlacing(enabled = false) {
    * @param {number} y
    */
   function placed(x, y) {
-    dispatch({ type: "PLACED", payload:{ x, y } });
+    dispatch({ type: "PLACED", payload: { x, y } });
   }
 
   /**
-   * Listens for changes in the enabled argument and puts into placing
-   * state if enabled is true.
+   * Listens for changes in the hook arguments and dispatches appropriate
+   * actions
    */
   useEffect(() => {
-    if (enabled) {
+    if (state.status.isIdle && toolName === currentTool) {
       dispatch({ type: "PLACING" });
+      return;
     }
-  }, [enabled]);
+
+    if (toolName !== currentTool && state.status.isPlacing) {
+      reset();
+    }
+  }, [currentTool, state.status.isIdle, state.status.isPlacing, toolName]);
 
   return {
     state: state.status,

@@ -45,8 +45,8 @@ function Canvas({
   const { lines, drawMouseDown, drawMouseMove, drawMouseUp } = useDraw();
   const [stageDim, setStageDim] = useState({ w: window.innerWidth, h: window.innerHeight });
   const [bgImageLoadded, setBgImageLoadded] = useState(false);
-  const notePlacing = usePlacing(NOTE === currentTool);
-  const textPlacing = usePlacing(TEXT === currentTool);
+  const notePlacing = usePlacing(NOTE, currentTool);
+  const textPlacing = usePlacing(TEXT, currentTool);
 
   const bgImage = new Image();
   bgImage.onload = () => {
@@ -87,21 +87,6 @@ function Canvas({
       }
     }
   }, [lastShortcut, deleteItem, notePlacing, textPlacing, canvasItems.items, clearSelected]);
-
-  /**
-   * This effect handles reseting any Placers when canceling by switching to a
-   * different tool
-   */
-  useEffect(() => {
-    if (currentTool !== TEXT && textPlacing.state.isPlacing) {
-      textPlacing.reset();
-      return;
-    }
-
-    if (currentTool !== NOTE && notePlacing.state.isPlacing) {
-      notePlacing.reset();
-    }
-  }, [currentTool, notePlacing, textPlacing]);
 
   return (
     <>
@@ -186,6 +171,7 @@ function Canvas({
           x={textPlacing.position.x}
           y={textPlacing.position.y}
           onSave={(text) => {
+            console.log(text, 'onSave')
             addItem(text);
             setTool(POINTER);
             clearActiveText();
