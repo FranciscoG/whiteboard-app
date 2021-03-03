@@ -28,6 +28,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--bg-color);
+  overflow: hidden;
 }
 
 .btn-clear {
@@ -45,6 +46,7 @@ body {
   background-color: var(--bg-color);
   // background-image: radial-gradient(#cbcbcb 2px, var(--bg-color) 2px);
   // background-size: 60px 60px;
+  overflow: hidden;
 }
 
 .cursor-pencil {
@@ -64,7 +66,7 @@ body {
 }
 
 .cursor-grab {
-  cursor: grab;
+  cursor: grab !important;
 }
 
 .cursor-grabbing {

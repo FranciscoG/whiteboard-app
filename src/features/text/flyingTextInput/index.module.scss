@@ -6,7 +6,7 @@
 }
 
 .input {
-  background: rgba(0,0,0,0.1);
+  background: rgba(0, 0, 0, 0.1);
   font-family: sans-serif;
   resize: both;
   height: auto;
@@ -16,4 +16,39 @@
   display: block;
   padding: 5px 10px;
   font-weight: bold;
+}
+
+.actions {
+  display: flex;
+  margin-top: 10px;
+}
+
+.buttonIcon {
+  display: inline-flex;
+  width: 35px;
+  height: 35px;
+  border: 1px solid gray;
+  border-radius: 50%;
+  padding: 5px;
+
+  justify-content: center;
+  align-items: center;
+
+  img {
+    display: block;
+    height: auto;
+  }
+}
+
+.save {
+  margin-left: 5px;
+  img {
+    width: 100%;
+  }
+}
+
+.cancel {
+  img {
+    width: 80%;
+  }
 }

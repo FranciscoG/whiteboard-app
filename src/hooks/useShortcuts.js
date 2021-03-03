@@ -34,6 +34,8 @@ function useShortcuts() {
         return;
       }
 
+      // TODO: this should only work when certain tools are active and only for
+      // the specific active tool
       if (e.key === KEYS["["]) {
         dispatch(decrementThickness());
       } else if (e.key === KEYS["]"]) {

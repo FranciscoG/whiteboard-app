@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import Draggable from "components/draggable";
 import KEYS from "utils/KEYS";
 import { TEXT } from "features/tools/constants";
 import { textPropTypes } from "features/text";
+import IconButton from "components/IconButton";
+import checkmark from "assets/icons/check.svg";
+import cancelX from "assets/icons/times.svg";
 import styles from "./index.module.scss";
+import { cn } from "utils";
 
 const defaultText = {
   type: TEXT,
@@ -21,14 +25,38 @@ const defaultText = {
 };
 
 function FlyingTextInput({ x = 0, y = 0, textData = defaultText, onSave, onCancel }) {
+  const inputRef = useRef(null);
   const [position, setPosition] = useState({ x, y });
+  const [text, setText] = useState(textData.text);
 
-  console.log(position, 'flyingtext render')
+  useEffect(()=> {
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [])
 
   function onKeyUp(e) {
     if (e.key === KEYS.esc) {
       onCancel();
+      return;
     }
+
+    setText(e.target.textContent);
+  }
+
+  function save() {
+    if (!text.trim()) {
+      onCancel();
+      return;
+    }
+    const rect = inputRef.current.getBoundingClientRect();
+    onSave({
+      ...textData,
+      ...position,
+      width: rect.width,
+      height: rect.height,
+      text: text.trim(),
+    });
   }
 
   const styleObj = textData.width ? { width: textData.width } : { width: 400 };
@@ -41,15 +69,16 @@ function FlyingTextInput({ x = 0, y = 0, textData = defaultText, onSave, onCance
       // 20px padding-top of container + 5px padTop of input
       startY={y - 25}
       onDragEnd={(pos) => {
-        console.log(pos, 'flyingtext input drag end')
+        console.log(pos, "flyingtext input drag end");
         setPosition(pos);
       }}
     >
-      <form className={styles.inputContainer}>
-        <label className="visually-hidden" htmlFor="enterText">
+      <div className={styles.inputContainer}>
+        <div className="visually-hidden" id="enterText">
           Add text to canvas
-        </label>
+        </div>
         <div
+          ref={inputRef}
           style={styleObj}
           autoCorrect="off"
           autoCapitalize="off"
@@ -62,23 +91,39 @@ function FlyingTextInput({ x = 0, y = 0, textData = defaultText, onSave, onCance
           tabIndex={0}
           onKeyUp={onKeyUp}
           onBlur={(e) => {
-            if (!e.target.textContent.trim()) {
-              onCancel();
+            if (
+              e.relatedTarget instanceof HTMLButtonElement &&
+              e.relatedTarget.id === "flyingText_cancel"
+            ) {
+              console.log(e.relatedTarget.id)
               return;
+            } else {
+              save()
             }
-            const rect = e.target.getBoundingClientRect();
-            onSave({
-              ...textData,
-              ...position,
-              width: rect.width,
-              height: rect.height,
-              text: e.target.textContent,
-            });
           }}
         >
           {textData.text}
         </div>
-      </form>
+        <div className={styles.actions}>
+          <IconButton
+            id="flyingText_cancel"
+            className={cn("btn-clear", styles.buttonIcon, styles.cancel)}
+            text="cancel"
+            icon={cancelX}
+            onClick={(e) => {
+              e.preventDefault();
+              onCancel();
+            }}
+          />
+          <IconButton
+            id="flyingText_save"
+            className={cn("btn-clear", styles.buttonIcon, styles.save)}
+            text="save"
+            icon={checkmark}
+            onClick={save}
+          />
+        </div>
+      </div>
     </Draggable>
   );
 }
